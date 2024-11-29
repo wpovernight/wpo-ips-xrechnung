@@ -56,7 +56,6 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 			add_filter( 'wpo_wcpdf_document_output_formats', array( $this, 'add_format' ), 10, 2 );
 			add_filter( 'wpo_wcpdf_document_settings_categories', array( $this, 'add_settings_categories' ), 10, 3 );
 			add_filter( 'wpo_wcpdf_settings_fields_documents_invoice_xrechnung', array( $this, 'add_settings_fields' ), 10, 5 );
-			add_filter( 'wpo_wcpdf_settings_documents_output_format', array( $this, 'add_settings_documents_output_format' ), 10, 2 );
 		}
 		
 		/**
@@ -168,20 +167,6 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 			);
 	
 			return apply_filters( "wpo_wcpdf_{$document_type}_xrechnung_settings_fields", $settings_fields, $option_name, $document );
-		}
-		
-		/**
-		 * Add XRechnung settings documents output format
-		 *
-		 * @param string $output_format
-		 * @param string $section
-		 * @return string
-		 */
-		public function add_settings_documents_output_format( string $output_format, string $section ): string {
-			if ( 'invoice' === $section && 'xrechnung' === $_REQUEST['output_format'] ) {
-				$output_format = esc_attr( $_REQUEST['output_format'] );
-			}
-			return $output_format;
 		}
 
 	}
