@@ -50,12 +50,22 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 		 * Constructor
 		 */
 		public function __construct() {
+			add_action( 'init', array( $this, 'load_translations' ) );
 			add_action( 'before_woocommerce_init', array( $this, 'custom_order_tables_compatibility' ) );
 			
 			add_filter( 'wpo_wcpdf_document_output_formats', array( $this, 'add_format' ), 10, 2 );
 			add_filter( 'wpo_wcpdf_document_settings_categories', array( $this, 'add_settings_categories' ), 10, 3 );
 			add_filter( 'wpo_wcpdf_settings_fields_documents_invoice_xrechnung', array( $this, 'add_settings_fields' ), 10, 5 );
 			add_filter( 'wpo_wcpdf_settings_documents_output_format', array( $this, 'add_settings_documents_output_format' ), 10, 2 );
+		}
+		
+		/**
+		 * Load translations
+		 * 
+		 * @return void
+		 */
+		public function load_translations(): void {
+			load_plugin_textdomain( 'wpo-ips-xrechnung', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 		}
 		
 		/**

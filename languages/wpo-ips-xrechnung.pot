@@ -1,0 +1,57 @@
+# Copyright (C) 2024 WP Overnight
+# This file is distributed under the GPLv3.
+msgid ""
+msgstr ""
+"Project-Id-Version: PDF Invoices & Packing Slips for WooCommerce - XRechnung 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wpo-ips-xrechnung\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-11-29T16:16:34+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.11.0\n"
+"X-Domain: wpo-ips-xrechnung\n"
+
+#. Plugin Name of the plugin
+#: wpo-ips-xrechnung.php
+msgid "PDF Invoices & Packing Slips for WooCommerce - XRechnung"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: wpo-ips-xrechnung.php
+msgid "https://wpovernight.com/downloads/woocommerce-pdf-invoices-packing-slips-bundle/"
+msgstr ""
+
+#. Description of the plugin
+#: wpo-ips-xrechnung.php
+msgid "XRechnung add-on for PDF Invoices & Packing Slips for WooCommerce plugin."
+msgstr ""
+
+#. Author of the plugin
+#: wpo-ips-xrechnung.php
+msgid "WP Overnight"
+msgstr ""
+
+#. Author URI of the plugin
+#: wpo-ips-xrechnung.php
+msgid "https://wpovernight.com"
+msgstr ""
+
+#: wpo-ips-xrechnung.php:108
+msgid "General"
+msgstr ""
+
+#: wpo-ips-xrechnung.php:141
+msgid "Enable"
+msgstr ""
+
+#: wpo-ips-xrechnung.php:152
+msgid "Attach to:"
+msgstr ""
+
+#. translators: directory path
+#: wpo-ips-xrechnung.php:162
+msgid "It looks like the temp folder (<code>%s</code>) is not writable, check the permissions for this folder! Without having write access to this folder, the plugin will not be able to email invoices."
+msgstr ""
