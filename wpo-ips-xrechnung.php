@@ -50,12 +50,15 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 		 * Constructor
 		 */
 		public function __construct() {
+			include_once dirname( __FILE__ ) . '/vendor/autoload.php';
+			
 			add_action( 'init', array( $this, 'load_translations' ) );
 			add_action( 'before_woocommerce_init', array( $this, 'custom_order_tables_compatibility' ) );
 			
 			add_filter( 'wpo_wcpdf_document_output_formats', array( $this, 'add_format' ), 10, 2 );
 			add_filter( 'wpo_wcpdf_document_settings_categories', array( $this, 'add_settings_categories' ), 10, 3 );
 			add_filter( 'wpo_wcpdf_settings_fields_documents_invoice_xrechnung', array( $this, 'add_settings_fields' ), 10, 5 );
+			add_filter( 'wpo_wcpdf_preview_data', array( $this, 'preview' ), 10, 4 );
 		}
 		
 		/**
@@ -167,6 +170,15 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 			);
 	
 			return apply_filters( "wpo_wcpdf_{$document_type}_xrechnung_settings_fields", $settings_fields, $option_name, $document );
+		}
+		
+		public function preview( $preview_data, $document, $order, $output_format ) {
+			if ( 'xrechnung' === $output_format ) {
+				$xrechnung_document = new \WPO\IPS\XRechnung\Documents\XRechnungDocument();
+				$preview_data       = $document->preview_xml( $output_format, $xrechnung_document );
+			}
+			
+			return $preview_data;
 		}
 
 	}

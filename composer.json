@@ -1,0 +1,12 @@
+{
+	"name": "wpovernight/wpo-ips-xrechnung",
+	"description": "PDF Invoices & Packing Slips for WooCommerce - XRechnung",
+	"autoload": {
+		"psr-4": {
+			"WPO\\IPS\\XRechnung\\": "xrechnung/"
+		}
+	},
+	"config": {
+		"platform-check": false
+	}
+}
