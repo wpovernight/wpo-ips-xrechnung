@@ -33,7 +33,8 @@ class InvoiceLineHandler extends XRechnungHandler {
 				
 				$applicableTaxes[] = array(
 					'ram:CalculatedAmount'      => wc_round_tax_total( $item[ $lineTotalKey ] ),
-					'ram:TypeCode'              => $taxOrderData['name'],
+					'ram:TypeCode'              => strtoupper( $taxOrderData['scheme'] ),
+					'ram:CategoryCode'		    => strtoupper( $taxOrderData['category'] ),
 					'ram:BasisAmount'           => wc_format_decimal( $item->get_subtotal(), 2 ),
 					'ram:RateApplicablePercent' => round( $taxOrderData['percentage'], 2 ),
 				);

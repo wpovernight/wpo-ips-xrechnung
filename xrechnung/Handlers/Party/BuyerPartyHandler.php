@@ -57,7 +57,7 @@ class BuyerPartyHandler extends XRechnungHandler {
 			$vat_number = $this->document->order->get_meta( $meta_key, true );
 			if ( ! empty( $vat_number ) ) {
 				return array(
-					'ram:ID'       => $vat_number,
+					'ram:ID'       => wp_strip_all_tags( $vat_number ),
 					'ram:SchemeID' => 'VA', // Default to VAT scheme
 				);
 			}

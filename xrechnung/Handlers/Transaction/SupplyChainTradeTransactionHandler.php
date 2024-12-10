@@ -33,7 +33,8 @@ class SupplyChainTradeTransactionHandler extends XRechnungHandler {
 				
 				$applicableTaxes[] = array(
 					'ram:CalculatedAmount'      => wc_round_tax_total( $item[ $lineTotalKey ] ),
-					'ram:TypeCode'              => $taxOrderData['name'],
+					'ram:TypeCode'              => strtoupper( $taxOrderData['scheme'] ),
+					'ram:CategoryCode'		    => strtoupper( $taxOrderData['category'] ),
 					'ram:BasisAmount'           => wc_format_decimal( $item->get_subtotal(), 2 ),
 					'ram:RateApplicablePercent' => round( $taxOrderData['percentage'], 2 ),
 				);
@@ -139,7 +140,8 @@ class SupplyChainTradeTransactionHandler extends XRechnungHandler {
 		foreach ( $order_taxes as $tax ) {
 			$applicable_taxes[] = array(
 				'ram:CalculatedAmount'      => $tax['total_tax'],
-				'ram:TypeCode'              => $tax['name'],
+				'ram:TypeCode'              => strtoupper( $tax['scheme'] ),
+				'ram:CategoryCode'		    => strtoupper( $tax['category'] ),
 				'ram:BasisAmount'           => wc_format_decimal( $this->document->order->get_subtotal(), 2 ),
 				'ram:RateApplicablePercent' => $tax['percentage'],
 			);

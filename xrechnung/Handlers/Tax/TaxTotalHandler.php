@@ -19,7 +19,8 @@ class TaxTotalHandler extends XRechnungHandler {
 				'name'  => 'ram:ApplicableTradeTax',
 				'value' => array(
 					'ram:CalculatedAmount'      => $tax['total_tax'],
-					'ram:TypeCode'              => $tax['name'],
+					'ram:TypeCode'              => strtoupper( $tax['scheme'] ),
+					'ram:CategoryCode'		    => strtoupper( $tax['category'] ),
 					'ram:BasisAmount'           => wc_format_decimal( $this->document->order->get_subtotal(), 2 ),
 					'ram:RateApplicablePercent' => $tax['percentage'],
 				),

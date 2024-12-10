@@ -10,6 +10,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class XRechnungDocument extends XMLDocument {
+	
+	/**
+	 * Root element
+	 *
+	 * @var string
+	 */
+	public $root_element = 'rsm:CrossIndustryInvoice';
 
 	public function get_format() {
 		$format = apply_filters( 'wpo_ips_xrechnung_document_format', array(

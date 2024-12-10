@@ -34,7 +34,7 @@ class SellerPartyHandler extends XRechnungHandler {
 					'ram:URIID' => get_site_url(),
 				),
 				'ram:SpecifiedTaxRegistration'  => array(
-					'ram:ID'       => isset( WPO_WCPDF()->settings->general_settings['vat_number'] ) ? WPO_WCPDF()->settings->general_settings['vat_number'] : '',
+					'ram:ID'       => isset( WPO_WCPDF()->settings->general_settings['vat_number'] ) ? reset( WPO_WCPDF()->settings->general_settings['vat_number'] ) : '',
 					'ram:SchemeID' => 'VA', // VAT scheme
 				),
 			),

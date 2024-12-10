@@ -11,23 +11,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 class ExchangeDocumentContextHandler extends XRechnungHandler {
 
 	public function handle( $data, $options = array() ) {
-		// Add the Business Process ID
+		// Business Process ID
 		$businessProcessID = array(
 			'name'  => 'ram:BusinessProcessSpecifiedDocumentContextParameter',
 			'value' => array(
-				'ram:ID' => 'urn:cen.eu:en16931:2017',
+				'ram:ID' => 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0',
 			),
 		);
-		$data[] = apply_filters( 'wpo_ips_xrechnung_handle_business_process_id', $businessProcessID, $data, $options, $this );
 
-		// Add the Guideline ID
+		// Guideline ID
 		$guidelineID = array(
 			'name'  => 'ram:GuidelineSpecifiedDocumentContextParameter',
 			'value' => array(
-				'ram:ID' => 'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0',
+				'ram:ID' => 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:01:1.0',
 			),
 		);
-		$data[] = apply_filters( 'wpo_ips_xrechnung_handle_guideline_id', $guidelineID, $data, $options, $this );
+
+		$exchangedDocumentContext = array(
+			'name'  => 'rsm:ExchangedDocumentContext',
+			'value' => array(
+				apply_filters( 'wpo_ips_xrechnung_handle_business_process_id', $businessProcessID, $data, $options, $this ),
+				apply_filters( 'wpo_ips_xrechnung_handle_guideline_id', $guidelineID, $data, $options, $this ),
+			),
+		);
+
+		$data[] = $exchangedDocumentContext;
 
 		return $data;
 	}
