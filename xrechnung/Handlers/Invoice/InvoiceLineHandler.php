@@ -3,6 +3,7 @@
 namespace WPO\IPS\XRechnung\Handlers\Invoice;
 
 use WPO\IPS\XRechnung\Handlers\XRechnungHandler;
+use Automattic\WooCommerce\Utilities\NumberUtil;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -11,15 +12,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 class InvoiceLineHandler extends XRechnungHandler {
 
 	public function handle( $data, $options = array() ) {
-		$invoice_lines = array();
-		
-		foreach ( $this->document->order->get_items() as $item_id => $item ) {
-			$applicableTaxes  = array();
+		$items = $this->document->order->get_items( array( 'line_item', 'fee', 'shipping' ) );
+
+		// Build the tax totals array
+		foreach ( $items as $item_id => $item ) {
+			$taxSubtotal      = [];
 			$taxDataContainer = ( $item['type'] == 'line_item' ) ? 'line_tax_data' : 'taxes';
 			$taxDataKey       = ( $item['type'] == 'line_item' ) ? 'subtotal'      : 'total';
 			$lineTotalKey     = ( $item['type'] == 'line_item' ) ? 'line_total'    : 'total';
 			$line_tax_data    = $item[ $taxDataContainer ];
-			
+
 			foreach ( $line_tax_data[ $taxDataKey ] as $tax_id => $tax ) {
 				if ( empty( $tax ) ) {
 					$tax = 0;
@@ -29,51 +31,106 @@ class InvoiceLineHandler extends XRechnungHandler {
 					continue;
 				}
 
-				$taxOrderData = $this->document->order_tax_data[ $tax_id ];
-				
-				$applicableTaxes[] = array(
-					'ram:CalculatedAmount'      => wc_round_tax_total( $item[ $lineTotalKey ] ),
-					'ram:TypeCode'              => strtoupper( $taxOrderData['scheme'] ),
-					'ram:CategoryCode'		    => strtoupper( $taxOrderData['category'] ),
-					'ram:BasisAmount'           => wc_format_decimal( $item->get_subtotal(), 2 ),
-					'ram:RateApplicablePercent' => round( $taxOrderData['percentage'], 2 ),
+				$taxOrderData  = $this->document->order_tax_data[ $tax_id ];
+
+				$taxSubtotal[] = array(
+					'name'  => 'cac:TaxSubtotal',
+					'value' => array(
+						array(
+							'name'       => 'cbc:TaxableAmount',
+							'value'      => wc_round_tax_total( $item[ $lineTotalKey ] ),
+							'attributes' => array(
+								'currencyID' => $this->document->order->get_currency(),
+							),
+						),
+						array(
+							'name'       => 'cbc:TaxAmount',
+							'value'      => wc_round_tax_total( $tax ),
+							'attributes' => array(
+								'currencyID' => $this->document->order->get_currency(),
+							),
+						),
+						array(
+							'name'  => 'cac:TaxCategory',
+							'value' => array(
+								array(
+									'name'  => 'cbc:ID',
+									'value' => strtoupper( $taxOrderData['category'] ),
+								),
+								array(
+									'name'  => 'cbc:Name',
+									'value' => $taxOrderData['name'],
+								),
+								array(
+									'name'  => 'cbc:Percent',
+									'value' => round( $taxOrderData['percentage'], 2 ),
+								),
+								array(
+									'name'  => 'cac:TaxScheme',
+									'value' => array(
+										array(
+											'name'  => 'cbc:ID',
+											'value' => strtoupper( $taxOrderData['scheme'] ),
+										),
+									),
+								),
+							),
+						),
+					),
 				);
 			}
-			
-			$invoice_lines[] = array(
-				'name'  => 'ram:IncludedSupplyChainTradeLineItem',
+
+			$invoiceLine = array(
+				'name'  => 'cac:InvoiceLine',
 				'value' => array(
-					'ram:AssociatedDocumentLineDocument' => array(
-						'ram:LineID' => $item_id, // Unique identifier for the line
+					array(
+						'name'  => 'cbc:ID',
+						'value' => $item_id,
 					),
-					'ram:SpecifiedTradeProduct' => array(
-						'ram:Name'        => $item->get_name(),
-						'ram:Description' => $item->get_name(),
+					array(
+						'name'  => 'cbc:InvoicedQuantity',
+						'value' => $item->get_quantity(),
 					),
-					'ram:SpecifiedLineTradeAgreement' => array(
-						'ram:NetPriceProductTradePrice' => array(
-							'ram:ChargeAmount' => wc_format_decimal( $item->get_total() / $item->get_quantity(), 2 ), // Unit price
+					array(
+						'name'       => 'cbc:LineExtensionAmount',
+						'value'      => NumberUtil::round( $item->get_total(), wc_get_price_decimals() ),
+						'attributes' => array(
+							'currencyID' => $this->document->order->get_currency(),
 						),
 					),
-					'ram:SpecifiedLineTradeDelivery' => array(
-						'ram:BilledQuantity' => array(
-							'attributes' => array( 'unitCode' => 'C62' ), // Unit code for "piece"
-							'value'      => $item->get_quantity(),
+					array(
+						'name'  => 'cac:TaxTotal',
+						'value' => array(
+							array(
+								'name'       => 'cbc:TaxAmount',
+								'value'      => wc_round_tax_total( $item->get_total_tax() ),
+								'attributes' => array(
+									'currencyID' => $this->document->order->get_currency(),
+								),
+							),
+							$taxSubtotal,
 						),
 					),
-					'ram:SpecifiedLineTradeSettlement' => array(
-						'ram:ApplicableTradeTax'                            => $applicableTaxes,
-						'ram:SpecifiedTradeSettlementLineMonetarySummation' => array(
-							'ram:LineTotalAmount' => wc_format_decimal( $item->get_total(), 2 ),
+					array(
+						'name'  => 'cac:Item',
+						'value' => array(
+							array(
+								'name'  => 'cbc:Name',
+								'value' => $item->get_name(),
+							),
 						),
 					),
 				),
 			);
+
+
+			$data[] = apply_filters( 'wpo_wc_ubl_handle_InvoiceLine', $invoiceLine, $data, $options, $item, $this );
+
+			// Empty this array at the end of the loop per item, so data doesn't stack
+			$taxSubtotal = [];
 		}
-		
-		$data[] = apply_filters( 'wpo_ips_xrechnung_handle_invoice_lines', $invoice_lines, $data, $options, $this );
 
 		return $data;
 	}
-	
+
 }

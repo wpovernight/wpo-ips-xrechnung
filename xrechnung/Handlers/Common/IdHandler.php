@@ -8,15 +8,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-class AllowanceChargeHandler extends XRechnungHandler {
+class IdHandler extends XRechnungHandler {
 
 	public function handle( $data, $options = array() ) {
-		$allowanceCharge = array(
-			'name'  => 'cac:AllowanceCharge',
-			'value' => array(),
+		$ID = array(
+			'name'  => 'cbc:ID',
+			'value' => $this->document->order_document->get_number()->get_formatted(),
 		);
 
-		$data[] = apply_filters( 'wpo_wc_ubl_handle_AllowanceCharge', $allowanceCharge, $data, $options, $this );
+		$data[] = apply_filters( 'wpo_wc_ubl_handle_ID', $ID, $data, $options, $this );
 
 		return $data;
 	}

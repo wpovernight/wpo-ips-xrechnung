@@ -16,41 +16,75 @@ class XRechnungDocument extends XMLDocument {
 	 *
 	 * @var string
 	 */
-	public $root_element = 'rsm:CrossIndustryInvoice';
+	public $root_element = 'ubl:Invoice';
 
 	public function get_format() {
-		$format = apply_filters( 'wpo_ips_xrechnung_document_format', array(
-			'exchangedocumentcontext' => array(
+		$format = apply_filters( 'wpo_ips_xrechnung_document_format' , array(
+			'customizationid' => array(
 				'enabled' => true,
-				'handler' => \WPO\IPS\XRechnung\Handlers\Document\ExchangeDocumentContextHandler::class,
+				'handler' => \WPO\IPS\XRechnung\Handlers\Common\CustomizationIdHandler::class,
 			),
-			'exchangedocument' => array(
+			'profileid' => array(
 				'enabled' => true,
-				'handler' => \WPO\IPS\XRechnung\Handlers\Document\ExchangeDocumentHandler::class,
+				'handler' => \WPO\IPS\XRechnung\Handlers\Common\ProfileIdHandler::class,
 			),
-			'supplychaintradetransaction' => array(
+			'id' => array(
 				'enabled' => true,
-				'handler' => \WPO\IPS\XRechnung\Handlers\Transaction\SupplyChainTradeTransactionHandler::class,
+				'handler' => \WPO\IPS\XRechnung\Handlers\Common\IdHandler::class,
 			),
-			'sellerparty' => array(
+			'issuedate' => array(
 				'enabled' => true,
-				'handler' => \WPO\IPS\XRechnung\Handlers\Party\SellerPartyHandler::class,
+				'handler' => \WPO\IPS\XRechnung\Handlers\Common\IssueDateHandler::class,
 			),
-			'buyerparty' => array(
+			'duedate' => array(
 				'enabled' => true,
-				'handler' => \WPO\IPS\XRechnung\Handlers\Party\BuyerPartyHandler::class,
+				'handler' => \WPO\IPS\XRechnung\Handlers\Common\DueDateHandler::class,
+			),
+			'invoicetype' => array(
+				'enabled' => true,
+				'handler' => \WPO\IPS\XRechnung\Handlers\Invoice\InvoiceTypeCodeHandler::class,
+			),
+			'invoicenote' => array(
+				'enabled' => true,
+				'handler' => \WPO\IPS\XRechnung\Handlers\Invoice\InvoiceNoteHandler::class,
+			),
+			'documentcurrencycode' => array(
+				'enabled' => true,
+				'handler' => \WPO\IPS\XRechnung\Handlers\Common\DocumentCurrencyCodeHandler::class,
+			),
+			'buyerreference' => array(
+				'enabled' => true,
+				'handler' => \WPO\IPS\XRechnung\Handlers\Common\BuyerReferenceHandler::class,
+			),
+			'additionaldocumentreference' => array(
+				'enabled' => true,
+				'handler' => \WPO\IPS\XRechnung\Handlers\Common\AdditionalDocumentReferenceHandler::class,
+			),
+			'accountsupplierparty' => array(
+				'enabled' => true,
+				'handler' => \WPO\IPS\XRechnung\Handlers\Common\AddressHandler::class,
+				'options' => array(
+					'root' => 'AccountingSupplierParty',
+				),
+			),
+			'accountingcustomerparty' => array(
+				'enabled' => true,
+				'handler' => \WPO\IPS\XRechnung\Handlers\Common\AddressHandler::class,
+				'options' => array(
+					'root' => 'AccountingCustomerParty',
+				),
 			),
 			'delivery' => array(
-				'enabled' => true,
+				'enabled' => false,
 				'handler' => \WPO\IPS\XRechnung\Handlers\Common\DeliveryHandler::class,
 			),
 			'paymentmeans' => array(
-				'enabled' => true,
-				'handler' => \WPO\IPS\XRechnung\Handlers\Payment\PaymentMeansHandler::class,
+				'enabled' => false,
+				'handler' => \WPO\IPS\XRechnung\Handlers\Common\PaymentMeansHandler::class,
 			),
 			'paymentterms' => array(
-				'enabled' => true,
-				'handler' => \WPO\IPS\XRechnung\Handlers\Payment\PaymentTermsHandler::class,
+				'enabled' => false,
+				'handler' => \WPO\IPS\XRechnung\Handlers\Common\PaymentTermsHandler::class,
 			),
 			'allowancecharge' => array(
 				'enabled' => false,
@@ -58,11 +92,11 @@ class XRechnungDocument extends XMLDocument {
 			),
 			'taxtotal' => array(
 				'enabled' => true,
-				'handler' => \WPO\IPS\XRechnung\Handlers\Tax\TaxTotalHandler::class,
+				'handler' => \WPO\IPS\XRechnung\Handlers\Common\TaxTotalHandler::class,
 			),
 			'legalmonetarytotal' => array(
 				'enabled' => true,
-				'handler' => \WPO\IPS\XRechnung\Handlers\Monetary\LegalMonetaryTotalHandler::class,
+				'handler' => \WPO\IPS\XRechnung\Handlers\Common\LegalMonetaryTotalHandler::class,
 			),
 			'invoicelines' => array(
 				'enabled' => true,
@@ -81,11 +115,11 @@ class XRechnungDocument extends XMLDocument {
 
 	public function get_namespaces() {
 		return apply_filters( 'wpo_ips_xrechnung_document_namespaces', array(
-			'rsm' => 'urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100',
-			'ram' => 'urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100',
-			'udt' => 'urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100',
+			'ubl' => 'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2',
+			'cac' => 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2',
+			'cbc' => 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2',
 		) );
-	}
+	}	
 
 	public function get_data() {
 		$data = array();
