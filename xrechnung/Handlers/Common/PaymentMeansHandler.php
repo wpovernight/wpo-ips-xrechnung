@@ -9,16 +9,109 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class PaymentMeansHandler extends XRechnungHandler {
-
+	
 	public function handle( $data, $options = array() ) {
 		$payment_means = array(
 			'name'  => 'cac:PaymentMeans',
-			'value' => array(),
+			'value' => $this->get_payment_means(),
 		);
 
-		$data[] = apply_filters( 'wpo_wc_ubl_handle_PaymentMeans', $payment_means, $data, $options, $this );
-
+		$data[] = apply_filters( 'wpo_wc_ubl_handle_PaymentMeans', $payment_means, $options, $this );
+		
 		return $data;
 	}
 
+	private function get_payment_means_code( $payment_method ) {
+		// Map WooCommerce payment methods to XRechnung Payment Means Code
+		$mapping = array(
+			'bacs'   => '31',
+			'cheque' => '20',
+			'paypal' => '48',
+			'stripe' => '48',
+		);
+
+		return isset( $mapping[ $payment_method ] ) ? $mapping[ $payment_method ] : '97'; // Default to 'Other'
+	}
+
+	public function get_payment_means() {
+		$payment_method    = $this->document->order->get_payment_method();
+		$payment_type_code = $this->get_payment_means_code( $payment_method );
+
+		$payment_means = array(
+			array(
+				'name'  => 'cbc:PaymentMeansCode',
+				'value' => $payment_type_code,
+			),
+		);
+
+		switch ( $payment_method ) {
+			case 'bacs':
+				$bank_accounts = get_option(' woocommerce_bacs_accounts', array() );
+
+				if ( ! empty( $bank_accounts ) && is_array( $bank_accounts ) ) {
+					$default_account = reset( $bank_accounts ); // Use the first bank account
+					
+					$payment_means[] = array(
+						'name'  => 'cac:PayeeFinancialAccount',
+						'value' => array(
+							array(
+								'name'  => 'cbc:ID',
+								'value' => $default_account['iban'] ?? '',
+							),
+							array(
+								'name'  => 'cbc:Name',
+								'value' => $default_account['account_name'] ?? get_bloginfo( 'name' ),
+							),
+						),
+					);
+				}
+				break;
+
+			case 'paypal':
+				$paypal_transaction_id = $this->document->order->get_meta( '_paypal_transaction_id', true );
+
+				$payment_means[] = array(
+					'name'  => 'cac:PayeeFinancialAccount',
+					'value' => array(
+						array(
+							'name'  => 'cbc:ID',
+							'value' => $paypal_transaction_id,
+						),
+						array(
+							'name'  => 'cbc:Name',
+							'value' => 'PayPal',
+						),
+					),
+				);
+				break;
+
+			case 'stripe':
+				$stripe_source_id = $this->document->order->get_meta( '_stripe_source_id', true );
+
+				$payment_means[] = array(
+					'name'  => 'cac:PayeeFinancialAccount',
+					'value' => array(
+						array(
+							'name'  => 'cbc:ID',
+							'value' => $stripe_source_id,
+						),
+						array(
+							'name'  => 'cbc:Name',
+							'value' => 'Stripe',
+						),
+					),
+				);
+				break;
+
+			default: // Other Payment Methods
+				$payment_means[] = array(
+					'name'  => 'cbc:InstructionNote',
+					'value' => $this->document->order->get_payment_method_title(),
+				);
+				break;
+		}
+
+		return $payment_means;
+	}
+	
 }

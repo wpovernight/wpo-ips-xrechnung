@@ -77,12 +77,8 @@ class AddressHandler extends XRechnungHandler {
 					array(
 						'name'  => 'cac:Country',
 						'value' => array(
-							'name'       => 'cbc:IdentificationCode',
-							'value'      => get_option( 'woocommerce_default_country' ),
-							'attributes' => array(
-								'listID'       => 'ISO3166-1:Alpha2',
-								'listAgencyID' => '6',
-							),
+							'name'  => 'cbc:IdentificationCode',
+							'value' => get_option( 'woocommerce_default_country' ),
 						),
 					),
 				),
@@ -110,34 +106,71 @@ class AddressHandler extends XRechnungHandler {
 			);
 		}
 		
-		if ( ! empty( $company ) && ! empty( $coc_number ) ) {
-			$supplierPartyDetails[] = array(
+		$partyLegalEntity = array();
+		if ( ! empty( $company ) ) {
+			$partyLegalEntity = array(
 				'name'  => 'cac:PartyLegalEntity',
 				'value' => array(
 					array(
 						'name'  => 'cbc:RegistrationName',
 						'value' => $company,
 					),
-					array(
-						'name'       => 'cbc:CompanyID',
-						'value'      => $coc_number,
-						'attributes' => array(
-							'schemeID' => '0106',
-						),
-					),
 				),
 			);
 		}
-
-		$supplierPartyDetails[] = array(
-			'name'  => 'cac:Contact',
-			'value' => array(
-				array(
-					'name'  => 'cbc:ElectronicMail',
-					'value' => get_option( 'woocommerce_email_from_address' ),
+		
+		if ( ! empty( $partyLegalEntity ) && ! empty( $coc_number ) ) {
+			$partyLegalEntity['value'][] = array(
+				'name'       => 'cbc:CompanyID',
+				'value'      => $coc_number,
+				'attributes' => array(
+					'schemeID' => '0106',
 				),
-			),
+			);
+		}
+		
+		if ( ! empty( $partyLegalEntity ) ) {
+			$supplierPartyDetails[] = $partyLegalEntity;
+		}
+		
+
+		$contact = array(
+			'name'  => 'cac:Contact',
+			'value' => array(),
 		);
+		
+		$shop_name = is_callable( array( $this->document->order_document, 'get_shop_name' ) ) 
+			? $this->document->order_document->get_shop_name() 
+			: '';
+			
+		if ( ! empty( $shop_name ) ) {
+			$contact['value'][] = array(
+				'name'  => 'cbc:Name',
+				'value' => $shop_name,
+			);
+		}
+		
+		$shop_phone_number = is_callable( array( $this->document->order_document, 'get_shop_phone_number' ) ) 
+			? $this->document->order_document->get_shop_phone_number() 
+			: '';
+		
+		if ( ! empty( $shop_phone_number ) ) {
+			$contact['value'][] = array(
+				'name'  => 'cbc:Telephone',
+				'value' => $shop_phone_number,
+			);
+		}
+		
+		$email = get_option( 'woocommerce_email_from_address' );
+		
+		if ( ! empty( $email ) ) {
+			$contact['value'][] = array(
+				'name'  => 'cbc:ElectronicMail',
+				'value' => $email,
+			);
+		}
+		
+		$supplierPartyDetails[] = $contact;		
 		
 		return $supplierPartyDetails;
 	}
@@ -216,12 +249,8 @@ class AddressHandler extends XRechnungHandler {
 								array(
 									'name'  => 'cac:Country',
 									'value' => array(
-										'name'       => 'cbc:IdentificationCode',
-										'value'      => $this->document->order->get_billing_country(),
-										'attributes' => array(
-											'listID'       => 'ISO3166-1:Alpha2',
-											'listAgencyID' => '6',
-										),
+										'name'  => 'cbc:IdentificationCode',
+										'value' => $this->document->order->get_billing_country(),
 									),
 								),
 							),

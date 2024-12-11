@@ -58,10 +58,6 @@ class InvoiceLineHandler extends XRechnungHandler {
 									'value' => strtoupper( $taxOrderData['category'] ),
 								),
 								array(
-									'name'  => 'cbc:Name',
-									'value' => $taxOrderData['name'],
-								),
-								array(
 									'name'  => 'cbc:Percent',
 									'value' => round( $taxOrderData['percentage'], 2 ),
 								),
@@ -79,7 +75,7 @@ class InvoiceLineHandler extends XRechnungHandler {
 					),
 				);
 			}
-
+			
 			$invoiceLine = array(
 				'name'  => 'cac:InvoiceLine',
 				'value' => array(
@@ -90,6 +86,9 @@ class InvoiceLineHandler extends XRechnungHandler {
 					array(
 						'name'  => 'cbc:InvoicedQuantity',
 						'value' => $item->get_quantity(),
+						'attributes' => array(
+							'unitCode' => 'C62',
+						),
 					),
 					array(
 						'name'       => 'cbc:LineExtensionAmount',
@@ -99,24 +98,45 @@ class InvoiceLineHandler extends XRechnungHandler {
 						),
 					),
 					array(
-						'name'  => 'cac:TaxTotal',
-						'value' => array(
-							array(
-								'name'       => 'cbc:TaxAmount',
-								'value'      => wc_round_tax_total( $item->get_total_tax() ),
-								'attributes' => array(
-									'currencyID' => $this->document->order->get_currency(),
-								),
-							),
-							$taxSubtotal,
-						),
-					),
-					array(
 						'name'  => 'cac:Item',
 						'value' => array(
 							array(
 								'name'  => 'cbc:Name',
 								'value' => $item->get_name(),
+							),
+							array(
+								'name' => 'cac:ClassifiedTaxCategory',
+								'value' => array(
+									array(
+										'name'  => 'cbc:ID',
+										'value' => strtoupper( $taxOrderData['category'] ),
+									),
+									array(
+										'name'  => 'cbc:Percent',
+										'value' => round( $taxOrderData['percentage'], 2 ),
+									),
+									array(
+										'name' => 'cac:TaxScheme',
+										'value' => array(
+											array(
+												'name'  => 'cbc:ID',
+												'value' => strtoupper( $taxOrderData['scheme'] ),
+											),
+										),
+									),
+								),
+							)
+						),
+					),
+					array(
+						'name'  => 'cac:Price',
+						'value' => array(
+							array(
+								'name'       => 'cbc:PriceAmount',
+								'value'      => NumberUtil::round( $this->get_item_unit_price( $item ), wc_get_price_decimals() ),
+								'attributes' => array(
+									'currencyID' => $this->document->order->get_currency(),
+								),
 							),
 						),
 					),
@@ -131,6 +151,22 @@ class InvoiceLineHandler extends XRechnungHandler {
 		}
 
 		return $data;
+	}
+	
+	/**
+	 * Get the unit price of an item
+	 *
+	 * @param WC_Order_Item $item
+	 * @return int|float
+	 */
+	private function get_item_unit_price( $item ) {
+		if ( is_a( $item, 'WC_Order_Item_Product' ) ) {
+			return $item->get_subtotal() / $item->get_quantity();
+		} elseif ( is_a( $item, 'WC_Order_Item_Shipping' ) || is_a( $item, 'WC_Order_Item_Fee' ) ) {
+			return $item->get_total();
+		} else {
+			return 0;
+		}
 	}
 
 }

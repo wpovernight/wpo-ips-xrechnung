@@ -37,10 +37,6 @@ class TaxTotalHandler extends XRechnungHandler {
 								'value' => strtoupper( $item['category'] ),
 							),
 							array(
-								'name'  => 'cbc:Name',
-								'value' => $item['name'],
-							),
-							array(
 								'name'  => 'cbc:Percent',
 								'value' => round( $item['percentage'], 1 ),
 							),
