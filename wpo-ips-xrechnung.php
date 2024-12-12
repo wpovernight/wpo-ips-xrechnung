@@ -82,6 +82,8 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 			add_filter( 'wpo_wcpdf_preview_data', array( $this, 'preview' ), 10, 4 );
 			add_filter( 'wpo_wcpdf_listing_actions', array( $this, 'add_listing_action' ), 10, 2 );
 			add_filter( 'wpo_wcpdf_xml_formats', array( $this, 'add_xml_format' ) );
+			add_filter( 'wpo_wcpdf_document_output_format_extensions', array( $this, 'add_format_extension' ) );
+			add_filter( 'wpo_wcpdf_get_custom_attachment', array( $this, 'get_attachment' ), 10, 5 );
 		}
 		
 		/**
@@ -324,6 +326,41 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 		public function add_xml_format( array $formats ): array {
 			$formats[] = $this->output_format;
 			return $formats;
+		}
+		
+		/**
+		 * Add XRechnung format extension
+		 *
+		 * @param array $format_extensions
+		 * @return array
+		 */
+		public function add_format_extension( array $format_extensions ): array {
+			$format_extensions[ $this->output_format ] = '.xml';
+			return $format_extensions;
+		}
+		
+		/**
+		 * Get attachment
+		 *
+		 * @param string $full_filename
+		 * @param \WPO\IPS\Documents\OrderDocument $document
+		 * @param string $tmp_path
+		 * @param string $output_format
+		 * @return string
+		 */
+		public function get_attachment( string $full_filename, \WPO\IPS\Documents\OrderDocument $document, string $tmp_path, string $output_format ): string {
+			$xml_maker = wcpdf_get_xml_maker();
+			$xml_maker->set_file_path( $tmp_path );
+			
+			$xrechnung_document = new \WPO\IPS\XRechnung\Documents\XRechnungDocument();
+			$xrechnung_document->set_order( $document->order );
+			$xrechnung_document->set_order_document( $document );
+			
+			$contents      = $xml_maker->build( $xrechnung_document );
+			$filename      = $document->get_filename( 'download', [ 'output' => $this->output_format ] );
+			$full_filename = $xml_maker->write( $filename, $contents );
+			
+			return $full_filename;
 		}
 
 	}
