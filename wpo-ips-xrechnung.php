@@ -280,7 +280,7 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 					'printed'       => false,
 					'ubl'           => true,
 					'class'         => apply_filters( 'wpo_ips_xrechnung_action_button_class', implode( ' ', $class ), $document ),
-					'output_format' => 'ubl', // required to show the correct icon
+					'output_format' => $output_format,
 				);
 			}
 			
