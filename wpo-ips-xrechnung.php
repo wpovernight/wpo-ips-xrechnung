@@ -28,6 +28,13 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 		public $version = '1.0.0';
 		
 		/**
+		 * Base plugin version
+		 *
+		 * @var string
+		 */
+		public $base_plugin_version = '3.9.1';
+		
+		/**
 		 * Plugin instance
 		 *
 		 * @var WPO_IPS_XRechnung
@@ -50,6 +57,11 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 		 * Constructor
 		 */
 		public function __construct() {
+			if ( class_exists( 'WPO_WCPDF' ) && version_compare( WPO_WCPDF()->version, $this->base_plugin_version, '<' ) ) {
+				add_action( 'admin_notices', array( $this, 'base_plugin_dependency_notice' ) );
+				return;
+			}
+			
 			include_once dirname( __FILE__ ) . '/vendor/autoload.php';
 			
 			add_action( 'init', array( $this, 'load_translations' ) );
@@ -59,6 +71,26 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 			add_filter( 'wpo_wcpdf_document_settings_categories', array( $this, 'add_settings_categories' ), 10, 3 );
 			add_filter( 'wpo_wcpdf_settings_fields_documents_invoice_xrechnung', array( $this, 'add_settings_fields' ), 10, 5 );
 			add_filter( 'wpo_wcpdf_preview_data', array( $this, 'preview' ), 10, 4 );
+		}
+		
+		/**
+		 * Base plugin dependency notice
+		 * 
+		 * @return void
+		 */
+		public function base_plugin_dependency_notice(): void {
+			$error = sprintf( 
+				/* translators: plugin version */
+				__( 'PDF Invoices & Packing Slips for WooCommerce - XRechnung requires PDF Invoices & Packing Slips for WooCommerce version %s or higher.', 'wpo-ips-xrechnung' ), 
+				$this->base_plugin_version
+			);
+
+			$message = sprintf( 
+				'<div class="notice notice-error"><p>%s</p></div>', 
+				$error, 
+			);
+
+			echo $message;
 		}
 		
 		/**
