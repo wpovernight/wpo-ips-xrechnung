@@ -39,10 +39,11 @@ class AddressHandler extends UblHandler {
 	}
 
 	public function return_supplier_party_details() {
-		$company    = ! empty( $this->document->order_document ) ? $this->document->order_document->get_shop_name()       : '';
-		$address    = ! empty( $this->document->order_document ) ? $this->document->order_document->get_shop_address()    : get_option( 'woocommerce_store_address' );
-		$vat_number = ! empty( $this->document->order_document ) ? $this->document->order_document->get_shop_vat_number() : '';
-		$coc_number = ! empty( $this->document->order_document ) ? $this->document->order_document->get_shop_coc_number() : '';
+		$company      = ! empty( $this->document->order_document ) ? $this->document->order_document->get_shop_name()         : '';
+		$address      = ! empty( $this->document->order_document ) ? $this->document->order_document->get_shop_address()      : get_option( 'woocommerce_store_address' );
+		$vat_number   = ! empty( $this->document->order_document ) ? $this->document->order_document->get_shop_vat_number()   : '';
+		$coc_number   = ! empty( $this->document->order_document ) ? $this->document->order_document->get_shop_coc_number()   : '';
+		$phone_number = ! empty( $this->document->order_document ) ? $this->document->order_document->get_shop_phone_number() : '';
 
 		$supplierPartyDetails = array(
 			array(
@@ -132,32 +133,23 @@ class AddressHandler extends UblHandler {
 		if ( ! empty( $partyLegalEntity ) ) {
 			$supplierPartyDetails[] = $partyLegalEntity;
 		}
-		
 
 		$contact = array(
 			'name'  => 'cac:Contact',
 			'value' => array(),
 		);
-		
-		$shop_name = is_callable( array( $this->document->order_document, 'get_shop_name' ) ) 
-			? $this->document->order_document->get_shop_name() 
-			: '';
 			
-		if ( ! empty( $shop_name ) ) {
+		if ( ! empty( $company ) ) {
 			$contact['value'][] = array(
 				'name'  => 'cbc:Name',
-				'value' => $shop_name,
+				'value' => $company,
 			);
 		}
 		
-		$shop_phone_number = is_callable( array( $this->document->order_document, 'get_shop_phone_number' ) ) 
-			? $this->document->order_document->get_shop_phone_number() 
-			: '';
-		
-		if ( ! empty( $shop_phone_number ) ) {
+		if ( ! empty( $phone_number ) ) {
 			$contact['value'][] = array(
 				'name'  => 'cbc:Telephone',
-				'value' => $shop_phone_number,
+				'value' => $phone_number,
 			);
 		}
 		
