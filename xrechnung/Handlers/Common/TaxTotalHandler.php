@@ -60,7 +60,7 @@ class TaxTotalHandler extends UblHandler {
 			'value' => array(
 				array(
 					'name'       => 'cbc:TaxAmount',
-					'value'      => round( $this->document->order->get_total_tax(), 2 ),
+					'value'      => wc_round_tax_total( $this->document->order->get_total_tax() ),
 					'attributes' => array(
 						'currencyID' => $this->document->order->get_currency(),
 					),

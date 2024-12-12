@@ -3,7 +3,6 @@
 namespace WPO\IPS\XRechnung\Handlers\Invoice;
 
 use WPO\IPS\UBL\Handlers\UblHandler;
-use Automattic\WooCommerce\Utilities\NumberUtil;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -92,7 +91,7 @@ class InvoiceLineHandler extends UblHandler {
 					),
 					array(
 						'name'       => 'cbc:LineExtensionAmount',
-						'value'      => NumberUtil::round( $item->get_total(), wc_get_price_decimals() ),
+						'value'      => round( $item->get_total(), 2 ),
 						'attributes' => array(
 							'currencyID' => $this->document->order->get_currency(),
 						),
@@ -133,7 +132,7 @@ class InvoiceLineHandler extends UblHandler {
 						'value' => array(
 							array(
 								'name'       => 'cbc:PriceAmount',
-								'value'      => NumberUtil::round( $this->get_item_unit_price( $item ), wc_get_price_decimals() ),
+								'value'      => round( $this->get_item_unit_price( $item ), 2 ),
 								'attributes' => array(
 									'currencyID' => $this->document->order->get_currency(),
 								),

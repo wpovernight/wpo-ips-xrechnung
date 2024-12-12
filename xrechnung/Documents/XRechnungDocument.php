@@ -96,7 +96,7 @@ class XRechnungDocument extends XMLDocument {
 			),
 			'legalmonetarytotal' => array(
 				'enabled' => true,
-				'handler' => \WPO\IPS\UBL\Handlers\Common\LegalMonetaryTotalHandler::class,
+				'handler' => \WPO\IPS\XRechnung\Handlers\Common\LegalMonetaryTotalHandler::class,
 			),
 			'invoicelines' => array(
 				'enabled' => true,
