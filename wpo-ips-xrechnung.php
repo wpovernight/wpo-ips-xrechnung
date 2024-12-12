@@ -204,7 +204,16 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 			return apply_filters( "wpo_wcpdf_{$document_type}_xrechnung_settings_fields", $settings_fields, $option_name, $document );
 		}
 		
-		public function preview( $preview_data, $document, $order, $output_format ) {
+		/**
+		 * Preview XRechnung
+		 *
+		 * @param string $preview_data
+		 * @param \WPO\IPS\Documents\OrderDocument $document
+		 * @param \WC_Abstract_Order $order
+		 * @param string $output_format
+		 * @return string
+		 */
+		public function preview( string $preview_data, \WPO\IPS\Documents\OrderDocument $document, \WC_Abstract_Order $order, string $output_format ): string {
 			if ( 'xrechnung' === $output_format ) {
 				$xrechnung_document = new \WPO\IPS\XRechnung\Documents\XRechnungDocument();
 				$preview_data       = $document->preview_xml( $output_format, $xrechnung_document );
