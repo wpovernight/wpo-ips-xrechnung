@@ -84,6 +84,7 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 			add_filter( 'wpo_wcpdf_xml_formats', array( $this, 'add_xml_format' ) );
 			add_filter( 'wpo_wcpdf_document_output_format_extensions', array( $this, 'add_format_extension' ) );
 			add_filter( 'wpo_wcpdf_get_custom_attachment', array( $this, 'get_attachment' ), 10, 5 );
+			add_filter( 'wpo_wcpdf_xml_meta_box_actions', array( $this, 'add_xml_meta_box_action' ), 10, 2 );
 		}
 		
 		/**
@@ -361,6 +362,46 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 			$full_filename = $xml_maker->write( $filename, $contents );
 			
 			return $full_filename;
+		}
+		
+		/**
+		 * Add XRechnung meta box action
+		 *
+		 * @param array $meta_box_actions
+		 * @param \WC_Abstract_Order $order
+		 * @return array
+		 */
+		public function add_xml_meta_box_action( array $meta_box_actions, \WC_Abstract_Order $order ): array {
+			$document = wcpdf_get_document( 'invoice', $order );
+			
+			if ( ! $document ) {
+				return $meta_box_actions;
+			}
+			
+			$document_type  = $document->get_type();
+			$document_title = $document->get_title();
+			$output_format  = $this->output_format;
+			
+			if ( $document->is_enabled( $output_format ) && wcpdf_is_ubl_available() ) {
+				$document_url    = WPO_WCPDF()->endpoint->get_document_link( $order, $document_type, array( 'output' => $output_format ) );
+				$document_exists = is_callable( array( $document, 'exists' ) ) ? $document->exists() : false;
+				$class           = array( $document_type, $output_format );
+				$action_key      = "{$document_type}_{$output_format}";
+
+				if ( $document_exists ) {
+					$class[] = 'exists';
+				}
+				
+				$meta_box_actions[ $action_key ] = array(
+					'url'           => esc_url( $document_url ),
+					'alt'           => "XRechnung {$document_title}",
+					'title'         => "XRechnung {$document_title}",
+					'exists'        => $document_exists,
+					'class'         => apply_filters( 'wpo_ips_xrechnung_action_button_class', implode( ' ', $class ), $document ),
+				);
+			}
+			
+			return $meta_box_actions;
 		}
 
 	}
