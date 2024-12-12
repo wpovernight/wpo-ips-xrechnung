@@ -20,11 +20,13 @@ For the generated XML file to be valid and compliant, certain data points need t
 - Shop Name
 - Shop Address
 - Shop VAT Number
+- Shop Phone Number
 
 ### Customer Data
 
 - Company Name
 - Company VAT Number
+- Other default customer data
 
 #### Supported Customer VAT Number Plugins
 
