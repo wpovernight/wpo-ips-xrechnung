@@ -35,6 +35,13 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 		public $base_plugin_version = '3.9.1-beta-3';
 		
 		/**
+		 * Output format
+		 *
+		 * @var string
+		 */
+		public $output_format = 'xrechnung';
+		
+		/**
 		 * Plugin instance
 		 *
 		 * @var WPO_IPS_XRechnung
@@ -66,11 +73,14 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 			
 			add_action( 'init', array( $this, 'load_translations' ) );
 			add_action( 'before_woocommerce_init', array( $this, 'custom_order_tables_compatibility' ) );
+			add_action( 'wpo_wcpdf_document_output', array( $this, 'document_output' ), 10, 2 );
 			
 			add_filter( 'wpo_wcpdf_document_output_formats', array( $this, 'add_format' ), 10, 2 );
+			add_filter( 'wpo_wcpdf_beta_tabs', array( $this, 'add_beta_tag' ) );
 			add_filter( 'wpo_wcpdf_document_settings_categories', array( $this, 'add_settings_categories' ), 10, 3 );
 			add_filter( 'wpo_wcpdf_settings_fields_documents_invoice_xrechnung', array( $this, 'add_settings_fields' ), 10, 5 );
 			add_filter( 'wpo_wcpdf_preview_data', array( $this, 'preview' ), 10, 4 );
+			add_filter( 'wpo_wcpdf_listing_actions', array( $this, 'add_listing_action' ), 10, 2 );
 		}
 		
 		/**
@@ -122,9 +132,20 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 		 */
 		public function add_format( array $formats, $document ): array {
 			if ( 'invoice' === $document->get_type() ) {
-				$formats[] = 'xrechnung';
+				$formats[] = $this->output_format;
 			}
 			return $formats;
+		}
+		
+		/**
+		 * Add XRechnung beta tag
+		 *
+		 * @param array $beta_tabs
+		 * @return array
+		 */
+		public function add_beta_tag( array $beta_tabs ): array {
+			$beta_tabs[] = $this->output_format;
+			return $beta_tabs;
 		}
 		
 		/**
@@ -136,7 +157,7 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 		 * @return array
 		 */
 		public function add_settings_categories( array $settings_categories, string $output_format, $document ): array {
-			if ( 'xrechnung' === $output_format ) {
+			if ( $this->output_format === $output_format ) {
 				$settings_categories = array(
 					'general' => array(
 						'title'   => __( 'General', 'wpo-ips-xrechnung' ),
@@ -214,12 +235,69 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 		 * @return string
 		 */
 		public function preview( string $preview_data, \WPO\IPS\Documents\OrderDocument $document, \WC_Abstract_Order $order, string $output_format ): string {
-			if ( 'xrechnung' === $output_format ) {
+			if ( $this->output_format === $output_format ) {
 				$xrechnung_document = new \WPO\IPS\XRechnung\Documents\XRechnungDocument();
 				$preview_data       = $document->preview_xml( $output_format, $xrechnung_document );
 			}
 			
 			return $preview_data;
+		}
+		
+		/**
+		 * Add XRechnung listing action
+		 *
+		 * @param array $listing_actions
+		 * @param \WC_Abstract_Order $order
+		 * @return array
+		 */
+		public function add_listing_action( array $listing_actions, \WC_Abstract_Order $order ): array {
+			$document = wcpdf_get_document( 'invoice', $order );
+			
+			if ( ! $document ) {
+				return $listing_actions;
+			}
+			
+			$document_type  = $document->get_type();
+			$document_title = $document->get_title();
+			$icon           = ! empty( $document->icon ) ? $document->icon : WPO_WCPDF()->plugin_url() . '/assets/images/generic_document.svg';
+			$output_format  = $this->output_format;
+			
+			if ( $document->is_enabled( $output_format ) && wcpdf_is_ubl_available() ) {
+				$document_url    = WPO_WCPDF()->endpoint->get_document_link( $order, $document_type, array( 'output' => $output_format ) );
+				$document_exists = is_callable( array( $document, 'exists' ) ) ? $document->exists() : false;
+				$class           = array( $document_type, $output_format );
+
+				if ( $document_exists ) {
+					$class[] = 'exists';
+				}
+
+				$listing_actions[ "{$document_type}_{$output_format}" ] = array(
+					'url'           => esc_url( $document_url ),
+					'img'           => $icon,
+					'alt'           => "XRechnung {$document_title}",
+					'exists'        => $document_exists,
+					'printed'       => false,
+					'ubl'           => true,
+					'class'         => apply_filters( 'wpo_ips_xrechnung_action_button_class', implode( ' ', $class ), $document ),
+					'output_format' => 'ubl', // required to show the correct icon
+				);
+			}
+			
+			return $listing_actions;
+		}
+		
+		/**
+		 * Output XRechnung
+		 *
+		 * @param \WPO\IPS\Documents\OrderDocument $document
+		 * @param string $output_format
+		 * @return void
+		 */
+		public function document_output( \WPO\IPS\Documents\OrderDocument $document, string $output_format ): void {
+			if ( $this->output_format === $output_format ) {
+				$xrechnung_document = new \WPO\IPS\XRechnung\Documents\XRechnungDocument();
+				$document->output_xml( $xrechnung_document );
+			}
 		}
 
 	}
