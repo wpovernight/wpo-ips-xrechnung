@@ -34,10 +34,6 @@ class ComposerStaticInitdc00fe943bfca8633eab23427e252a8b
         'WPO\\IPS\\XRechnung\\Handlers\\Invoice\\InvoiceLineHandler' => __DIR__ . '/../..' . '/xrechnung/Handlers/Invoice/InvoiceLineHandler.php',
         'WPO\\IPS\\XRechnung\\Handlers\\Invoice\\InvoiceNoteHandler' => __DIR__ . '/../..' . '/xrechnung/Handlers/Invoice/InvoiceNoteHandler.php',
         'WPO\\IPS\\XRechnung\\Handlers\\Invoice\\InvoiceTypeCodeHandler' => __DIR__ . '/../..' . '/xrechnung/Handlers/Invoice/InvoiceTypeCodeHandler.php',
-        'WPO\\IPS\\XRechnung\\Models\\Address' => __DIR__ . '/../..' . '/xrechnung/Models/Address.php',
-        'WPO\\IPS\\XRechnung\\Models\\DateTime' => __DIR__ . '/../..' . '/xrechnung/Models/DateTime.php',
-        'WPO\\IPS\\XRechnung\\Models\\Model' => __DIR__ . '/../..' . '/xrechnung/Models/Model.php',
-        'WPO\\IPS\\XRechnung\\Models\\Order' => __DIR__ . '/../..' . '/xrechnung/Models/Order.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

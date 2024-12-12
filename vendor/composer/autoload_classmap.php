@@ -19,8 +19,4 @@ return array(
     'WPO\\IPS\\XRechnung\\Handlers\\Invoice\\InvoiceLineHandler' => $baseDir . '/xrechnung/Handlers/Invoice/InvoiceLineHandler.php',
     'WPO\\IPS\\XRechnung\\Handlers\\Invoice\\InvoiceNoteHandler' => $baseDir . '/xrechnung/Handlers/Invoice/InvoiceNoteHandler.php',
     'WPO\\IPS\\XRechnung\\Handlers\\Invoice\\InvoiceTypeCodeHandler' => $baseDir . '/xrechnung/Handlers/Invoice/InvoiceTypeCodeHandler.php',
-    'WPO\\IPS\\XRechnung\\Models\\Address' => $baseDir . '/xrechnung/Models/Address.php',
-    'WPO\\IPS\\XRechnung\\Models\\DateTime' => $baseDir . '/xrechnung/Models/DateTime.php',
-    'WPO\\IPS\\XRechnung\\Models\\Model' => $baseDir . '/xrechnung/Models/Model.php',
-    'WPO\\IPS\\XRechnung\\Models\\Order' => $baseDir . '/xrechnung/Models/Order.php',
 );

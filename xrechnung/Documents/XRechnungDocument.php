@@ -3,7 +3,7 @@
 namespace WPO\IPS\XRechnung\Documents;
 
 use WPO\IPS\Documents\XMLDocument;
-use WPO\IPS\XRechnung\Models\Order;
+use WPO\IPS\UBL\Models\Order;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
