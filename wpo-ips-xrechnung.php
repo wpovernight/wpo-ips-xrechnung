@@ -73,7 +73,7 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 			
 			add_action( 'init', array( $this, 'load_translations' ) );
 			add_action( 'before_woocommerce_init', array( $this, 'custom_order_tables_compatibility' ) );
-			add_action( 'wpo_wcpdf_document_output', array( $this, 'document_output' ), 10, 2 );
+			add_action( 'wpo_wcpdf_document_custom_output', array( $this, 'document_output' ), 10, 2 );
 			
 			add_filter( 'wpo_wcpdf_document_output_formats', array( $this, 'add_format' ), 10, 2 );
 			add_filter( 'wpo_wcpdf_beta_tabs', array( $this, 'add_beta_tag' ) );
