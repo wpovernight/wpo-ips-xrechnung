@@ -181,15 +181,15 @@ class AddressHandler extends UblHandler {
 		if ( empty( $vat_number ) ) {
 			// Try fetching VAT Number from meta
 			$vat_meta_keys = array(
-				'_vat_number',              // WooCommerce EU VAT Number
-				'VAT Number',               // WooCommerce EU VAT Compliance
-				'vat_number',               // Aelia EU VAT Assistant
-				'_billing_vat_number',      // WooCommerce EU VAT Number 2.3.21+
-				'_billing_eu_vat_number',   // EU VAT Number for WooCommerce (WP Whale/former Algoritmika)
-				'yweu_billing_vat',         // YITH WooCommerce EU VAT
-				'billing_vat',              // German Market
-				'_billing_vat_id',          // Germanized Pro
-				'_shipping_vat_id'          // Germanized Pro (alternative)
+				'_vat_number',            // WooCommerce EU VAT Number
+				'VAT Number',             // WooCommerce EU VAT Compliance
+				'vat_number',             // Aelia EU VAT Assistant
+				'_billing_vat_number',    // WooCommerce EU VAT Number 2.3.21+
+				'_billing_eu_vat_number', // EU VAT Number for WooCommerce (WP Whale/former Algoritmika)
+				'yweu_billing_vat',       // YITH WooCommerce EU VAT
+				'billing_vat',            // German Market
+				'_billing_vat_id',        // Germanized Pro
+				'_shipping_vat_id'        // Germanized Pro (alternative)
 			);
 
 			foreach ( $vat_meta_keys as $meta_key ) {
