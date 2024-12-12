@@ -2,13 +2,13 @@
 
 namespace WPO\IPS\XRechnung\Handlers\Common;
 
-use WPO\IPS\XRechnung\Handlers\XRechnungHandler;
+use WPO\IPS\UBL\Handlers\UblHandler;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-class AddressHandler extends XRechnungHandler {
+class AddressHandler extends UblHandler {
 
 	public function handle( $data, $options = array() ) {
 		$root = isset( $options['root'] ) ? $options['root'] : 'AccountingSupplierParty';
@@ -33,7 +33,7 @@ class AddressHandler extends XRechnungHandler {
 			),
 		);
 
-		$data[] = apply_filters( 'wpo_wc_ubl_handle_AccountingSupplierParty', $supplierParty, $data, $options, $this );
+		$data[] = apply_filters( 'wpo_ips_xrechnung_handle_AccountingSupplierParty', $supplierParty, $data, $options, $this );
 
 		return $data;
 	}
@@ -176,7 +176,7 @@ class AddressHandler extends XRechnungHandler {
 	}
 
 	public function return_customer_party( $data, $options = array() ) {
-		$vat_number = apply_filters( 'wpo_wc_ubl_vat_number', '', $this->document->order );
+		$vat_number = apply_filters( 'wpo_ips_xrechnung_vat_number', '', $this->document->order );
 
 		if ( empty( $vat_number ) ) {
 			// Try fetching VAT Number from meta
@@ -287,7 +287,7 @@ class AddressHandler extends XRechnungHandler {
 			),
 		);
 
-		$data[] = apply_filters( 'wpo_wc_ubl_handle_AccountingCustomerParty', $customerParty, $data, $options, $this );
+		$data[] = apply_filters( 'wpo_ips_xrechnung_handle_AccountingCustomerParty', $customerParty, $data, $options, $this );
 
 		return $data;
 	}

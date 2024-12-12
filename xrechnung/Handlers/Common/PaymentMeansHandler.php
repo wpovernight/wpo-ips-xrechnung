@@ -2,13 +2,13 @@
 
 namespace WPO\IPS\XRechnung\Handlers\Common;
 
-use WPO\IPS\XRechnung\Handlers\XRechnungHandler;
+use WPO\IPS\UBL\Handlers\UblHandler;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-class PaymentMeansHandler extends XRechnungHandler {
+class PaymentMeansHandler extends UblHandler {
 	
 	public function handle( $data, $options = array() ) {
 		$payment_means = array(
@@ -16,7 +16,7 @@ class PaymentMeansHandler extends XRechnungHandler {
 			'value' => $this->get_payment_means(),
 		);
 
-		$data[] = apply_filters( 'wpo_wc_ubl_handle_PaymentMeans', $payment_means, $options, $this );
+		$data[] = apply_filters( 'wpo_ips_xrechnung_handle_PaymentMeans', $payment_means, $options, $this );
 		
 		return $data;
 	}

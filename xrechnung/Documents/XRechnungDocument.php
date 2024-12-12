@@ -30,11 +30,11 @@ class XRechnungDocument extends XMLDocument {
 			),
 			'id' => array(
 				'enabled' => true,
-				'handler' => \WPO\IPS\XRechnung\Handlers\Common\IdHandler::class,
+				'handler' => \WPO\IPS\UBL\Handlers\Common\IdHandler::class,
 			),
 			'issuedate' => array(
 				'enabled' => true,
-				'handler' => \WPO\IPS\XRechnung\Handlers\Common\IssueDateHandler::class,
+				'handler' => \WPO\IPS\UBL\Handlers\Common\IssueDateHandler::class,
 			),
 			'duedate' => array(
 				'enabled' => true,
@@ -58,7 +58,7 @@ class XRechnungDocument extends XMLDocument {
 			),
 			'additionaldocumentreference' => array(
 				'enabled' => true,
-				'handler' => \WPO\IPS\XRechnung\Handlers\Common\AdditionalDocumentReferenceHandler::class,
+				'handler' => \WPO\IPS\UBL\Handlers\Common\AdditionalDocumentReferenceHandler::class,
 			),
 			'accountsupplierparty' => array(
 				'enabled' => true,
@@ -76,7 +76,7 @@ class XRechnungDocument extends XMLDocument {
 			),
 			'delivery' => array(
 				'enabled' => false,
-				'handler' => \WPO\IPS\XRechnung\Handlers\Common\DeliveryHandler::class,
+				'handler' => \WPO\IPS\UBL\Handlers\Common\DeliveryHandler::class,
 			),
 			'paymentmeans' => array(
 				'enabled' => true,
@@ -84,11 +84,11 @@ class XRechnungDocument extends XMLDocument {
 			),
 			'paymentterms' => array(
 				'enabled' => false,
-				'handler' => \WPO\IPS\XRechnung\Handlers\Common\PaymentTermsHandler::class,
+				'handler' => \WPO\IPS\UBL\Handlers\Common\PaymentTermsHandler::class,
 			),
 			'allowancecharge' => array(
 				'enabled' => false,
-				'handler' => \WPO\IPS\XRechnung\Handlers\Common\AllowanceChargeHandler::class,
+				'handler' => \WPO\IPS\UBL\Handlers\Common\AllowanceChargeHandler::class,
 			),
 			'taxtotal' => array(
 				'enabled' => true,
@@ -96,7 +96,7 @@ class XRechnungDocument extends XMLDocument {
 			),
 			'legalmonetarytotal' => array(
 				'enabled' => true,
-				'handler' => \WPO\IPS\XRechnung\Handlers\Common\LegalMonetaryTotalHandler::class,
+				'handler' => \WPO\IPS\UBL\Handlers\Common\LegalMonetaryTotalHandler::class,
 			),
 			'invoicelines' => array(
 				'enabled' => true,

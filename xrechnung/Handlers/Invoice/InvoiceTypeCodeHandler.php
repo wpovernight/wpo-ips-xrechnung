@@ -2,13 +2,13 @@
 
 namespace WPO\IPS\XRechnung\Handlers\Invoice;
 
-use WPO\IPS\XRechnung\Handlers\XRechnungHandler;
+use WPO\IPS\UBL\Handlers\UblHandler;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-class InvoiceTypeCodeHandler extends XRechnungHandler {
+class InvoiceTypeCodeHandler extends UblHandler {
 
 	public function handle( $data, $options = array() ) {
 		$invoiceTypeCode = array(
@@ -16,7 +16,7 @@ class InvoiceTypeCodeHandler extends XRechnungHandler {
 			'value'      => '380',
 		);
 
-		$data[] = apply_filters( 'wpo_wc_ubl_handle_InvoiceTypeCode', $invoiceTypeCode, $data, $options, $this );
+		$data[] = apply_filters( 'wpo_ips_xrechnung_handle_InvoiceTypeCode', $invoiceTypeCode, $data, $options, $this );
 
 		return $data;
 	}

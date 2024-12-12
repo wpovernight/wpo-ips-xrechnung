@@ -2,14 +2,14 @@
 
 namespace WPO\IPS\XRechnung\Handlers\Invoice;
 
-use WPO\IPS\XRechnung\Handlers\XRechnungHandler;
+use WPO\IPS\UBL\Handlers\UblHandler;
 use Automattic\WooCommerce\Utilities\NumberUtil;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-class InvoiceLineHandler extends XRechnungHandler {
+class InvoiceLineHandler extends UblHandler {
 
 	public function handle( $data, $options = array() ) {
 		$items = $this->document->order->get_items( array( 'line_item', 'fee', 'shipping' ) );
@@ -144,7 +144,7 @@ class InvoiceLineHandler extends XRechnungHandler {
 			);
 
 
-			$data[] = apply_filters( 'wpo_wc_ubl_handle_InvoiceLine', $invoiceLine, $data, $options, $item, $this );
+			$data[] = apply_filters( 'wpo_ips_xrechnung_handle_InvoiceLine', $invoiceLine, $data, $options, $item, $this );
 
 			// Empty this array at the end of the loop per item, so data doesn't stack
 			$taxSubtotal = [];

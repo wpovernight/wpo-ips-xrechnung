@@ -2,13 +2,13 @@
 
 namespace WPO\IPS\XRechnung\Handlers\Common;
 
-use WPO\IPS\XRechnung\Handlers\XRechnungHandler;
+use WPO\IPS\UBL\Handlers\UblHandler;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-class TaxTotalHandler extends XRechnungHandler {
+class TaxTotalHandler extends UblHandler {
 
 	public function handle( $data, $options = array() ) {
 		$formatted_tax_array = array_map( function( $item ) {
@@ -69,7 +69,7 @@ class TaxTotalHandler extends XRechnungHandler {
 			),
 		);
 
-		$data[] = apply_filters( 'wpo_wc_ubl_handle_TaxTotal', $array, $data, $options, $this );
+		$data[] = apply_filters( 'wpo_ips_xrechnung_handle_TaxTotal', $array, $data, $options, $this );
 
 		return $data;
 	}

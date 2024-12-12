@@ -2,13 +2,13 @@
 
 namespace WPO\IPS\XRechnung\Handlers\Common;
 
-use WPO\IPS\XRechnung\Handlers\XRechnungHandler;
+use WPO\IPS\UBL\Handlers\UblHandler;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-class DueDateHandler extends XRechnungHandler {
+class DueDateHandler extends UblHandler {
 
 	public function handle( $data, $options = array() ) {
 		$due_date_timestamp = is_callable( array( $this->document->order_document, 'get_due_date' ) ) ? $this->document->order_document->get_due_date() : 0;
@@ -19,7 +19,7 @@ class DueDateHandler extends XRechnungHandler {
 				'value' => date( 'Y-m-d', $due_date_timestamp ),
 			);
 	
-			$data[] = apply_filters( 'wpo_wc_ubl_handle_DueDate', $dueDate, $data, $options, $this );
+			$data[] = apply_filters( 'wpo_ips_xrechnung_handle_DueDate', $dueDate, $data, $options, $this );
 		}
 
 		return $data;

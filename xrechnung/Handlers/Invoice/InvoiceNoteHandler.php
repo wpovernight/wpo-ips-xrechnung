@@ -2,13 +2,13 @@
 
 namespace WPO\IPS\XRechnung\Handlers\Invoice;
 
-use WPO\IPS\XRechnung\Handlers\XRechnungHandler;
+use WPO\IPS\UBL\Handlers\UblHandler;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-class InvoiceNoteHandler extends XRechnungHandler {
+class InvoiceNoteHandler extends UblHandler {
 
 	public function handle( $data, $options = array() ) {
 		$notes = $this->document->order_document->get_document_notes();
@@ -19,7 +19,7 @@ class InvoiceNoteHandler extends XRechnungHandler {
 				'value' => $this->document->order_document->get_document_notes(),
 			);
 	
-			$data[] = apply_filters( 'wpo_wc_ubl_handle_InvoiceNote', $invoiceNote, $data, $options, $this );
+			$data[] = apply_filters( 'wpo_ips_xrechnung_handle_InvoiceNote', $invoiceNote, $data, $options, $this );
 		}
 
 		return $data;
