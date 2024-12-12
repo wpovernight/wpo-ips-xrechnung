@@ -272,7 +272,8 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 					$class[] = 'exists';
 				}
 
-				$listing_actions[ "{$document_type}_{$output_format}" ] = array(
+				$new_action_key = "{$document_type}_{$output_format}";
+				$new_action     = array(
 					'url'           => esc_url( $document_url ),
 					'img'           => $icon,
 					'alt'           => "XRechnung {$document_title}",
@@ -282,6 +283,19 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 					'class'         => apply_filters( 'wpo_ips_xrechnung_action_button_class', implode( ' ', $class ), $document ),
 					'output_format' => $output_format,
 				);
+
+				// Add the new action to $listing_actions
+				$new_listing_actions = array();
+				foreach ( $listing_actions as $key => $action ) {
+					$new_listing_actions[ $key ] = $action;
+
+					// Insert the new action right after the "invoice" action
+					if ( 'invoice' === $key ) {
+						$new_listing_actions[ $new_action_key ] = $new_action;
+					}
+				}
+
+				return $new_listing_actions;
 			}
 			
 			return $listing_actions;
