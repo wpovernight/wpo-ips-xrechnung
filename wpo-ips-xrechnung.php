@@ -51,7 +51,7 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 		/**
 		 * Plugin instance
 		 * 
-		 * @return object
+		 * @return WPO_IPS_XRechnung
 		 */
 		public static function instance() {
 			if ( is_null( self::$_instance ) ) {
@@ -81,6 +81,7 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 			add_filter( 'wpo_wcpdf_settings_fields_documents_invoice_xrechnung', array( $this, 'add_settings_fields' ), 10, 5 );
 			add_filter( 'wpo_wcpdf_preview_data', array( $this, 'preview' ), 10, 4 );
 			add_filter( 'wpo_wcpdf_listing_actions', array( $this, 'add_listing_action' ), 10, 2 );
+			add_filter( 'wpo_wcpdf_xml_formats', array( $this, 'add_xml_format' ) );
 		}
 		
 		/**
@@ -298,6 +299,17 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 				$xrechnung_document = new \WPO\IPS\XRechnung\Documents\XRechnungDocument();
 				$document->output_xml( $xrechnung_document );
 			}
+		}
+		
+		/**
+		 * Add XRechnung format to XML formats
+		 *
+		 * @param array $formats
+		 * @return array
+		 */
+		public function add_xml_format( array $formats ): array {
+			$formats[] = $this->output_format;
+			return $formats;
 		}
 
 	}
