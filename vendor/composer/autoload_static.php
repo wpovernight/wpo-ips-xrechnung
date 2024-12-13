@@ -16,25 +16,24 @@ class ComposerStaticInitdc00fe943bfca8633eab23427e252a8b
     public static $prefixDirsPsr4 = array (
         'WPO\\IPS\\XRechnung\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/xrechnung',
+            0 => __DIR__ . '/../..' . '/ubl',
         ),
     );
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'WPO\\IPS\\XRechnung\\Documents\\XRechnungDocument' => __DIR__ . '/../..' . '/xrechnung/Documents/XRechnungDocument.php',
-        'WPO\\IPS\\XRechnung\\Handlers\\Common\\AddressHandler' => __DIR__ . '/../..' . '/xrechnung/Handlers/Common/AddressHandler.php',
-        'WPO\\IPS\\XRechnung\\Handlers\\Common\\BuyerReferenceHandler' => __DIR__ . '/../..' . '/xrechnung/Handlers/Common/BuyerReferenceHandler.php',
-        'WPO\\IPS\\XRechnung\\Handlers\\Common\\CustomizationIdHandler' => __DIR__ . '/../..' . '/xrechnung/Handlers/Common/CustomizationIdHandler.php',
-        'WPO\\IPS\\XRechnung\\Handlers\\Common\\DocumentCurrencyCodeHandler' => __DIR__ . '/../..' . '/xrechnung/Handlers/Common/DocumentCurrencyCodeHandler.php',
-        'WPO\\IPS\\XRechnung\\Handlers\\Common\\DueDateHandler' => __DIR__ . '/../..' . '/xrechnung/Handlers/Common/DueDateHandler.php',
-        'WPO\\IPS\\XRechnung\\Handlers\\Common\\LegalMonetaryTotalHandler' => __DIR__ . '/../..' . '/xrechnung/Handlers/Common/LegalMonetaryTotalHandler.php',
-        'WPO\\IPS\\XRechnung\\Handlers\\Common\\PaymentMeansHandler' => __DIR__ . '/../..' . '/xrechnung/Handlers/Common/PaymentMeansHandler.php',
-        'WPO\\IPS\\XRechnung\\Handlers\\Common\\ProfileIdHandler' => __DIR__ . '/../..' . '/xrechnung/Handlers/Common/ProfileIdHandler.php',
-        'WPO\\IPS\\XRechnung\\Handlers\\Common\\TaxTotalHandler' => __DIR__ . '/../..' . '/xrechnung/Handlers/Common/TaxTotalHandler.php',
-        'WPO\\IPS\\XRechnung\\Handlers\\Invoice\\InvoiceLineHandler' => __DIR__ . '/../..' . '/xrechnung/Handlers/Invoice/InvoiceLineHandler.php',
-        'WPO\\IPS\\XRechnung\\Handlers\\Invoice\\InvoiceNoteHandler' => __DIR__ . '/../..' . '/xrechnung/Handlers/Invoice/InvoiceNoteHandler.php',
-        'WPO\\IPS\\XRechnung\\Handlers\\Invoice\\InvoiceTypeCodeHandler' => __DIR__ . '/../..' . '/xrechnung/Handlers/Invoice/InvoiceTypeCodeHandler.php',
+        'WPO\\IPS\\XRechnung\\Handlers\\Common\\AddressHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Common/AddressHandler.php',
+        'WPO\\IPS\\XRechnung\\Handlers\\Common\\BuyerReferenceHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Common/BuyerReferenceHandler.php',
+        'WPO\\IPS\\XRechnung\\Handlers\\Common\\CustomizationIdHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Common/CustomizationIdHandler.php',
+        'WPO\\IPS\\XRechnung\\Handlers\\Common\\DocumentCurrencyCodeHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Common/DocumentCurrencyCodeHandler.php',
+        'WPO\\IPS\\XRechnung\\Handlers\\Common\\DueDateHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Common/DueDateHandler.php',
+        'WPO\\IPS\\XRechnung\\Handlers\\Common\\LegalMonetaryTotalHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Common/LegalMonetaryTotalHandler.php',
+        'WPO\\IPS\\XRechnung\\Handlers\\Common\\PaymentMeansHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Common/PaymentMeansHandler.php',
+        'WPO\\IPS\\XRechnung\\Handlers\\Common\\ProfileIdHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Common/ProfileIdHandler.php',
+        'WPO\\IPS\\XRechnung\\Handlers\\Common\\TaxTotalHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Common/TaxTotalHandler.php',
+        'WPO\\IPS\\XRechnung\\Handlers\\Invoice\\InvoiceLineHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Invoice/InvoiceLineHandler.php',
+        'WPO\\IPS\\XRechnung\\Handlers\\Invoice\\InvoiceNoteHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Invoice/InvoiceNoteHandler.php',
+        'WPO\\IPS\\XRechnung\\Handlers\\Invoice\\InvoiceTypeCodeHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Invoice/InvoiceTypeCodeHandler.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

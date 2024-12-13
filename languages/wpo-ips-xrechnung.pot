@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-12-12T12:32:26+00:00\n"
+"POT-Creation-Date: 2024-12-13T09:52:25+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: wpo-ips-xrechnung\n"
@@ -40,23 +40,6 @@ msgid "https://wpovernight.com"
 msgstr ""
 
 #. translators: plugin version
-#: wpo-ips-xrechnung.php:97
+#: wpo-ips-xrechnung.php:105
 msgid "PDF Invoices & Packing Slips for WooCommerce - XRechnung requires PDF Invoices & Packing Slips for WooCommerce version %s or higher."
-msgstr ""
-
-#: wpo-ips-xrechnung.php:166
-msgid "General"
-msgstr ""
-
-#: wpo-ips-xrechnung.php:199
-msgid "Enable"
-msgstr ""
-
-#: wpo-ips-xrechnung.php:210
-msgid "Attach to:"
-msgstr ""
-
-#. translators: directory path
-#: wpo-ips-xrechnung.php:220
-msgid "It looks like the temp folder (<code>%s</code>) is not writable, check the permissions for this folder! Without having write access to this folder, the plugin will not be able to email invoices."
 msgstr ""
