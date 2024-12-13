@@ -88,7 +88,7 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 			add_action( 'init', array( $this, 'load_translations' ) );
 			add_action( 'before_woocommerce_init', array( $this, 'custom_order_tables_compatibility' ) );
 			
-			add_filter( 'wpo_wcpdf_ubl_formats', array( $this, 'add_ubl_format' ) );
+			add_filter( 'wpo_wcpdf_document_ubl_settings_formats', array( $this, 'add_format_to_ubl_settings' ), 10, 2 );
 			add_filter( 'wpo_wc_ubl_document_root_element', array( $this, 'add_root_element' ), 10, 2 );
 			add_filter( 'wpo_wc_ubl_document_format', array( $this, 'set_document_format' ), 10, 2 );
 			add_filter( 'wpo_wc_ubl_document_namespaces', array( $this, 'set_document_namespaces' ), 10, 2 );
@@ -135,13 +135,17 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 		}
 		
 		/**
-		 * Add UBL format
+		 * Add format to UBL settings
 		 *
 		 * @param array $formats
+		 * @param \WPO\IPS\Documents\OrderDocument $document
 		 * @return array
 		 */
-		public function add_ubl_format( array $formats ): array {
-			$formats[ $this->ubl_format ] = $this->format_name;
+		public function add_format_to_ubl_settings( array $formats, \WPO\IPS\Documents\OrderDocument $document ): array {
+			if ( $document && 'invoice' === $document->get_type() ) {
+				$formats[ $this->ubl_format ] = $this->format_name;
+			}
+			
 			return $formats;
 		}
 		
