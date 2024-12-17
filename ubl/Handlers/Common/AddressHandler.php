@@ -247,37 +247,47 @@ class AddressHandler extends UblHandler {
 								),
 							),
 						),
-						array(
-							'name'  => 'cac:PartyTaxScheme',
-							'value' => array(
-								array(
-									'name'  => 'cbc:CompanyID',
-									'value' => $vat_number,
-								),
-								array(
-									'name'  => 'cac:TaxScheme',
-									'value' => array(
-										array(
-											'name'  => 'cbc:ID',
-											'value' => 'VAT',
-										),
-									),
-								),
-							),
-						),
-						array(
-							'name'  => 'cac:PartyLegalEntity',
-							'value' => array(
-								array(
-									'name'  => 'cbc:RegistrationName',
-									'value' => $customerPartyName,
-								),
-							),
-						),
 					),
 				),
 			),
 		);
+		
+		if ( ! empty( $vat_number ) ) {
+			$partyTaxScheme = array(
+				'name'  => 'cac:PartyTaxScheme',
+				'value' => array(
+					array(
+						'name'  => 'cbc:CompanyID',
+						'value' => $vat_number,
+					),
+					array(
+						'name'  => 'cac:TaxScheme',
+						'value' => array(
+							array(
+								'name'  => 'cbc:ID',
+								'value' => 'VAT',
+							),
+						),
+					),
+				),
+			);
+			
+			$customerParty['value'][0]['value'][] = $partyTaxScheme;
+		}
+		
+		if ( ! empty( $customerPartyName ) ) {
+			$partyLegalEntity = array(
+				'name'  => 'cac:PartyLegalEntity',
+				'value' => array(
+					array(
+						'name'  => 'cbc:RegistrationName',
+						'value' => $customerPartyName,
+					),
+				),
+			);
+			
+			$customerParty['value'][0]['value'][] = $partyLegalEntity;
+		}
 
 		$data[] = apply_filters( 'wpo_ips_xrechnung_handle_AccountingCustomerParty', $customerParty, $data, $options, $this );
 
