@@ -1,2 +1,5 @@
+= 1.0.1 (2024-12-17) =
+* Fix: shop country code
+
 = 1.0.0 (2024-12-16) =
 * First release
