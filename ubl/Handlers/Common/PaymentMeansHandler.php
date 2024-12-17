@@ -23,11 +23,13 @@ class PaymentMeansHandler extends UblHandler {
 
 	private function get_payment_means_code( $payment_method ) {
 		// Map WooCommerce payment methods to XRechnung Payment Means Code
+		// All available codes: https://docs.peppol.eu/poacc/billing/3.0/2024-Q2/codelist/UNCL4461/
 		$mapping = array(
+			'cod'    => '10',
 			'bacs'   => '31',
 			'cheque' => '20',
-			'paypal' => '48',
-			'stripe' => '48',
+			'paypal' => 'ZZZ',
+			'stripe' => 'ZZZ',
 		);
 
 		return isset( $mapping[ $payment_method ] ) ? $mapping[ $payment_method ] : '97'; // Default to 'Other'
