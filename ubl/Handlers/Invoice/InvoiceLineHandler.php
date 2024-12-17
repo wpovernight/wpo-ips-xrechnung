@@ -101,7 +101,7 @@ class InvoiceLineHandler extends UblHandler {
 						'value' => array(
 							array(
 								'name'  => 'cbc:Name',
-								'value' => $item->get_name(),
+								'value' => htmlspecialchars( $item->get_name(), ENT_XML1 | ENT_QUOTES, 'UTF-8' ),
 							),
 							array(
 								'name' => 'cac:ClassifiedTaxCategory',
