@@ -70,7 +70,7 @@ class PaymentMeansHandler extends UblHandler {
 				break;
 
 			case 'paypal':
-				$paypal_transaction_id = $this->document->order->get_meta( '_paypal_transaction_id', true );
+				$paypal_transaction_id = $this->document->order->get_meta( '_transaction_id', true );
 
 				$payment_means[] = array(
 					'name'  => 'cac:PayeeFinancialAccount',
