@@ -3,6 +3,7 @@
 namespace WPO\IPS\XRechnung\Handlers\Invoice;
 
 use WPO\IPS\UBL\Handlers\UblHandler;
+use WPO\IPS\UBL\Settings\TaxesSettings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -11,7 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 class InvoiceLineHandler extends UblHandler {
 
 	public function handle( $data, $options = array() ) {
-		$items = $this->document->order->get_items( array( 'line_item', 'fee', 'shipping' ) );
+		$items      = $this->document->order->get_items( array( 'line_item', 'fee', 'shipping' ) );
+		$taxReasons = TaxesSettings::get_available_reasons();
 
 		// Build the tax totals array
 		foreach ( $items as $item_id => $item ) {
@@ -30,7 +32,44 @@ class InvoiceLineHandler extends UblHandler {
 					continue;
 				}
 
-				$taxOrderData  = $this->document->order_tax_data[ $tax_id ];
+				$taxOrderData = $this->document->order_tax_data[ $tax_id ];
+				
+				// Build the TaxCategory array
+				$taxCategory = array(
+					array(
+						'name'  => 'cbc:ID',
+						'value' => strtoupper( $taxOrderData['category'] ),
+					),
+					array(
+						'name'  => 'cbc:Percent',
+						'value' => round( $taxOrderData['percentage'], 2 ),
+					),
+				);
+
+				// Add TaxExemptionReason only if it's not empty
+				if ( ! empty( $taxOrderData['reason'] ) ) {
+					$reasonKey      = $taxOrderData['reason'];
+					$reason         = ! empty( $taxReasons[ $reasonKey ] ) ? $taxReasons[ $reasonKey ] : $reasonKey;
+					$taxCategory[] = array(
+						'name'  => 'cbc:TaxExemptionReasonCode',
+						'value' => $reasonKey,
+					);
+					$taxCategory[] = array(
+						'name'  => 'cbc:TaxExemptionReason',
+						'value' => $reason,
+					);
+				}
+				
+				// Place the TaxScheme after the TaxExemptionReason
+				$taxCategory[] = array(
+					'name'  => 'cac:TaxScheme',
+					'value' => array(
+						array(
+							'name'  => 'cbc:ID',
+							'value' => strtoupper( $taxOrderData['scheme'] ),
+						),
+					),
+				);
 
 				$taxSubtotal[] = array(
 					'name'  => 'cac:TaxSubtotal',
@@ -51,25 +90,7 @@ class InvoiceLineHandler extends UblHandler {
 						),
 						array(
 							'name'  => 'cac:TaxCategory',
-							'value' => array(
-								array(
-									'name'  => 'cbc:ID',
-									'value' => strtoupper( $taxOrderData['category'] ),
-								),
-								array(
-									'name'  => 'cbc:Percent',
-									'value' => round( $taxOrderData['percentage'], 2 ),
-								),
-								array(
-									'name'  => 'cac:TaxScheme',
-									'value' => array(
-										array(
-											'name'  => 'cbc:ID',
-											'value' => strtoupper( $taxOrderData['scheme'] ),
-										),
-									),
-								),
-							),
+							'value' => $taxCategory,
 						),
 					),
 				);
