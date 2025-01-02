@@ -27,6 +27,8 @@ class PaymentTermsHandler extends UblHandler {
 			}
 		}
 		
+		$note = apply_filters( 'wpo_ips_xrechnung_payment_terms_note', $note, $data, $options, $this );
+		
 		if ( ! empty( $note ) ) {
 			$paymentTerms = array(
 				'name'  => 'cac:PaymentTerms',
