@@ -11,8 +11,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 class DueDateHandler extends UblHandler {
 
 	public function handle( $data, $options = array() ) {
-		$due_date_timestamp = is_callable( array( $this->document->order_document, 'get_due_date' ) ) ? $this->document->order_document->get_due_date() : 0;
-		
+		if ( $this->document->order->is_paid() ) {
+			$due_date_timestamp = $this->document->order->get_date_paid()->getTimestamp();
+		} else {
+			$due_date_timestamp = is_callable( array( $this->document->order_document, 'get_due_date' ) ) ? $this->document->order_document->get_due_date() : 0;
+		}
+				
 		if ( ! empty( $due_date_timestamp ) ) {
 			$dueDate = array(
 				'name'  => 'cbc:DueDate',
