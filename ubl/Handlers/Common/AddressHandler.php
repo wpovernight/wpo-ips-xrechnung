@@ -58,7 +58,7 @@ class AddressHandler extends UblHandler {
 				'value' => array(
 					array(
 						'name'  => 'cbc:StreetName',
-						'value' => get_option( 'woocommerce_store_address' ),
+						'value' => wpo_ips_ubl_sanitize_string( get_option( 'woocommerce_store_address' ) ),
 					),
 					array(
 						'name'  => 'cbc:CityName',
@@ -72,7 +72,7 @@ class AddressHandler extends UblHandler {
 						'name'  => 'cac:AddressLine',
 						'value' => array(
 							'name'  => 'cbc:Line',
-							'value' => $address,
+							'value' => wpo_ips_ubl_sanitize_string( $address ),
 						),
 					),
 					array(
@@ -114,7 +114,7 @@ class AddressHandler extends UblHandler {
 				'value' => array(
 					array(
 						'name'  => 'cbc:RegistrationName',
-						'value' => $company,
+						'value' => wpo_ips_ubl_sanitize_string( $company ),
 					),
 				),
 			);
@@ -142,7 +142,7 @@ class AddressHandler extends UblHandler {
 		if ( ! empty( $company ) ) {
 			$contact['value'][] = array(
 				'name'  => 'cbc:Name',
-				'value' => $company,
+				'value' => wpo_ips_ubl_sanitize_string( $company ),
 			);
 		}
 		
@@ -221,7 +221,7 @@ class AddressHandler extends UblHandler {
 							'value' => array(
 								array(
 									'name'  => 'cbc:StreetName',
-									'value' => $this->document->order->get_billing_address_1(),
+									'value' => wpo_ips_ubl_sanitize_string( $this->document->order->get_billing_address_1() ),
 								),
 								array(
 									'name'  => 'cbc:CityName',
@@ -235,7 +235,7 @@ class AddressHandler extends UblHandler {
 									'name'  => 'cac:AddressLine',
 									'value' => array(
 										'name'  => 'cbc:Line',
-										'value' => $this->document->order->get_billing_address_1() . '<br/>' . $this->document->order->get_billing_address_2(),
+										'value' => wpo_ips_ubl_sanitize_string( $this->document->order->get_billing_address_1() . '<br/>' . $this->document->order->get_billing_address_2() ),
 									),
 								),
 								array(
@@ -281,7 +281,7 @@ class AddressHandler extends UblHandler {
 				'value' => array(
 					array(
 						'name'  => 'cbc:RegistrationName',
-						'value' => $customerPartyName,
+						'value' => wpo_ips_ubl_sanitize_string( $customerPartyName ),
 					),
 				),
 			);

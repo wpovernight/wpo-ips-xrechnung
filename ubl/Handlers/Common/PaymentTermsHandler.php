@@ -35,7 +35,7 @@ class PaymentTermsHandler extends UblHandler {
 				'value' => array(
 					array(
 						'name'  => 'cbc:Note',
-						'value' => $note,
+						'value' => wpo_ips_ubl_sanitize_string( $note ),
 					),
 				),
 			);
