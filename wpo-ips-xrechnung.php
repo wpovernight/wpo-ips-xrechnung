@@ -247,7 +247,7 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 					),
 					'paymentmeans' => array(
 						'enabled' => true,
-						'handler' => \WPO\IPS\XRechnung\Handlers\Common\PaymentMeansHandler::class,
+						'handler' => \WPO\IPS\UBL\Handlers\Common\PaymentMeansHandler::class,
 					),
 					'paymentterms' => array(
 						'enabled' => true,
