@@ -27,17 +27,19 @@ class PaymentTermsHandler extends UblHandler {
 			}
 		}
 		
-		$paymentTerms = array(
-			'name'  => 'cac:PaymentTerms',
-			'value' => array(
-				array(
-					'name'  => 'cbc:Note',
-					'value' => $note,
+		if ( ! empty( $note ) ) {
+			$paymentTerms = array(
+				'name'  => 'cac:PaymentTerms',
+				'value' => array(
+					array(
+						'name'  => 'cbc:Note',
+						'value' => $note,
+					),
 				),
-			),
-		);
-
-		$data[] = apply_filters( 'wpo_ips_xrechnung_handle_PaymentTerms', $paymentTerms, $data, $options, $this );
+			);
+	
+			$data[] = apply_filters( 'wpo_ips_xrechnung_handle_PaymentTerms', $paymentTerms, $data, $options, $this );
+		}
 
 		return $data;
 	}
