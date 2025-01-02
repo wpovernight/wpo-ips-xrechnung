@@ -62,7 +62,7 @@ class AddressHandler extends UblHandler {
 					),
 					array(
 						'name'  => 'cbc:CityName',
-						'value' => get_option( 'woocommerce_store_city' ),
+						'value' => wpo_ips_ubl_sanitize_string( get_option( 'woocommerce_store_city' ) ),
 					),
 					array(
 						'name'  => 'cbc:PostalZone',
@@ -225,7 +225,7 @@ class AddressHandler extends UblHandler {
 								),
 								array(
 									'name'  => 'cbc:CityName',
-									'value' => $this->document->order->get_billing_city(),
+									'value' => wpo_ips_ubl_sanitize_string( $this->document->order->get_billing_city() ),
 								),
 								array(
 									'name'  => 'cbc:PostalZone',
