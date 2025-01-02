@@ -13,7 +13,6 @@ return array(
     'WPO\\IPS\\XRechnung\\Handlers\\Common\\DocumentCurrencyCodeHandler' => $baseDir . '/ubl/Handlers/Common/DocumentCurrencyCodeHandler.php',
     'WPO\\IPS\\XRechnung\\Handlers\\Common\\DueDateHandler' => $baseDir . '/ubl/Handlers/Common/DueDateHandler.php',
     'WPO\\IPS\\XRechnung\\Handlers\\Common\\LegalMonetaryTotalHandler' => $baseDir . '/ubl/Handlers/Common/LegalMonetaryTotalHandler.php',
-    'WPO\\IPS\\XRechnung\\Handlers\\Common\\PaymentMeansHandler' => $baseDir . '/ubl/Handlers/Common/PaymentMeansHandler.php',
     'WPO\\IPS\\XRechnung\\Handlers\\Common\\PaymentTermsHandler' => $baseDir . '/ubl/Handlers/Common/PaymentTermsHandler.php',
     'WPO\\IPS\\XRechnung\\Handlers\\Common\\ProfileIdHandler' => $baseDir . '/ubl/Handlers/Common/ProfileIdHandler.php',
     'WPO\\IPS\\XRechnung\\Handlers\\Common\\TaxTotalHandler' => $baseDir . '/ubl/Handlers/Common/TaxTotalHandler.php',
