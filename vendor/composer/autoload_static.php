@@ -29,6 +29,7 @@ class ComposerStaticInitdc00fe943bfca8633eab23427e252a8b
         'WPO\\IPS\\XRechnung\\Handlers\\Common\\DueDateHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Common/DueDateHandler.php',
         'WPO\\IPS\\XRechnung\\Handlers\\Common\\LegalMonetaryTotalHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Common/LegalMonetaryTotalHandler.php',
         'WPO\\IPS\\XRechnung\\Handlers\\Common\\PaymentMeansHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Common/PaymentMeansHandler.php',
+        'WPO\\IPS\\XRechnung\\Handlers\\Common\\PaymentTermsHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Common/PaymentTermsHandler.php',
         'WPO\\IPS\\XRechnung\\Handlers\\Common\\ProfileIdHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Common/ProfileIdHandler.php',
         'WPO\\IPS\\XRechnung\\Handlers\\Common\\TaxTotalHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Common/TaxTotalHandler.php',
         'WPO\\IPS\\XRechnung\\Handlers\\Invoice\\InvoiceLineHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Invoice/InvoiceLineHandler.php',
