@@ -8,7 +8,6 @@ $baseDir = dirname($vendorDir);
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'WPO\\IPS\\XRechnung\\Handlers\\Common\\AddressHandler' => $baseDir . '/ubl/Handlers/Common/AddressHandler.php',
-    'WPO\\IPS\\XRechnung\\Handlers\\Common\\BuyerReferenceHandler' => $baseDir . '/ubl/Handlers/Common/BuyerReferenceHandler.php',
     'WPO\\IPS\\XRechnung\\Handlers\\Common\\CustomizationIdHandler' => $baseDir . '/ubl/Handlers/Common/CustomizationIdHandler.php',
     'WPO\\IPS\\XRechnung\\Handlers\\Common\\DocumentCurrencyCodeHandler' => $baseDir . '/ubl/Handlers/Common/DocumentCurrencyCodeHandler.php',
     'WPO\\IPS\\XRechnung\\Handlers\\Common\\DueDateHandler' => $baseDir . '/ubl/Handlers/Common/DueDateHandler.php',

@@ -23,7 +23,6 @@ class ComposerStaticInitdc00fe943bfca8633eab23427e252a8b
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'WPO\\IPS\\XRechnung\\Handlers\\Common\\AddressHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Common/AddressHandler.php',
-        'WPO\\IPS\\XRechnung\\Handlers\\Common\\BuyerReferenceHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Common/BuyerReferenceHandler.php',
         'WPO\\IPS\\XRechnung\\Handlers\\Common\\CustomizationIdHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Common/CustomizationIdHandler.php',
         'WPO\\IPS\\XRechnung\\Handlers\\Common\\DocumentCurrencyCodeHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Common/DocumentCurrencyCodeHandler.php',
         'WPO\\IPS\\XRechnung\\Handlers\\Common\\DueDateHandler' => __DIR__ . '/../..' . '/ubl/Handlers/Common/DueDateHandler.php',

@@ -221,7 +221,7 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 					),
 					'buyerreference' => array(
 						'enabled' => true,
-						'handler' => \WPO\IPS\XRechnung\Handlers\Common\BuyerReferenceHandler::class,
+						'handler' => \WPO\IPS\UBL\Handlers\Common\BuyerReferenceHandler::class,
 					),
 					'additionaldocumentreference' => array(
 						'enabled' => true,
