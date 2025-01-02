@@ -16,7 +16,7 @@ class InvoiceNoteHandler extends UblHandler {
 		if ( ! empty( $notes ) ) {
 			$invoiceNote = array(
 				'name'  => 'cbc:Note',
-				'value' => $this->document->order_document->get_document_notes(),
+				'value' => wpo_ips_ubl_sanitize_string( $notes ),
 			);
 	
 			$data[] = apply_filters( 'wpo_ips_xrechnung_handle_InvoiceNote', $invoiceNote, $data, $options, $this );
