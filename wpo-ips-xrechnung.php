@@ -250,8 +250,8 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 						'handler' => \WPO\IPS\XRechnung\Handlers\Common\PaymentMeansHandler::class,
 					),
 					'paymentterms' => array(
-						'enabled' => false,
-						'handler' => \WPO\IPS\UBL\Handlers\Common\PaymentTermsHandler::class,
+						'enabled' => true,
+						'handler' => \WPO\IPS\XRechnung\Handlers\Common\PaymentTermsHandler::class,
 					),
 					'allowancecharge' => array(
 						'enabled' => false,
