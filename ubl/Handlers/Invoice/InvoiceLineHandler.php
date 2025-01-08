@@ -17,11 +17,12 @@ class InvoiceLineHandler extends UblHandler {
 
 		// Build the tax totals array
 		foreach ( $items as $item_id => $item ) {
-			$taxSubtotal      = [];
+			$taxSubtotal      = array();
 			$taxDataContainer = ( $item['type'] == 'line_item' ) ? 'line_tax_data' : 'taxes';
 			$taxDataKey       = ( $item['type'] == 'line_item' ) ? 'subtotal'      : 'total';
 			$lineTotalKey     = ( $item['type'] == 'line_item' ) ? 'line_total'    : 'total';
 			$line_tax_data    = $item[ $taxDataContainer ];
+			$taxOrderData     = array();
 
 			foreach ( $line_tax_data[ $taxDataKey ] as $tax_id => $tax ) {
 				if ( empty( $tax ) ) {
@@ -117,54 +118,60 @@ class InvoiceLineHandler extends UblHandler {
 							'currencyID' => $this->document->order->get_currency(),
 						),
 					),
+				),
+			);
+			
+			$invoiceLineItem = array(
+				'name'  => 'cac:Item',
+				'value' => array(
 					array(
-						'name'  => 'cac:Item',
-						'value' => array(
-							array(
-								'name'  => 'cbc:Name',
-								'value' => wpo_ips_ubl_sanitize_string( $item->get_name() ),
-							),
-							array(
-								'name' => 'cac:ClassifiedTaxCategory',
-								'value' => array(
-									array(
-										'name'  => 'cbc:ID',
-										'value' => strtoupper( $taxOrderData['category'] ),
-									),
-									array(
-										'name'  => 'cbc:Percent',
-										'value' => round( $taxOrderData['percentage'], 2 ),
-									),
-									array(
-										'name' => 'cac:TaxScheme',
-										'value' => array(
-											array(
-												'name'  => 'cbc:ID',
-												'value' => strtoupper( $taxOrderData['scheme'] ),
-											),
-										),
-									),
+						'name'  => 'cbc:Name',
+						'value' => wpo_ips_ubl_sanitize_string( $item->get_name() ),
+					),
+				),
+			);
+			
+			if ( ! empty( $taxOrderData ) ) {
+				$invoiceLineItem['value'][] = array(
+					'name' => 'cac:ClassifiedTaxCategory',
+					'value' => array(
+						array(
+							'name'  => 'cbc:ID',
+							'value' => strtoupper( $taxOrderData['category'] ),
+						),
+						array(
+							'name'  => 'cbc:Percent',
+							'value' => round( $taxOrderData['percentage'], 2 ),
+						),
+						array(
+							'name' => 'cac:TaxScheme',
+							'value' => array(
+								array(
+									'name'  => 'cbc:ID',
+									'value' => strtoupper( $taxOrderData['scheme'] ),
 								),
-							)
+							),
 						),
 					),
+				);
+			}
+			
+			$invoiceLinePrice = array(
+				'name'  => 'cac:Price',
+				'value' => array(
 					array(
-						'name'  => 'cac:Price',
-						'value' => array(
-							array(
-								'name'       => 'cbc:PriceAmount',
-								'value'      => round( $this->get_item_unit_price( $item ), 2 ),
-								'attributes' => array(
-									'currencyID' => $this->document->order->get_currency(),
-								),
-							),
+						'name'       => 'cbc:PriceAmount',
+						'value'      => round( $this->get_item_unit_price( $item ), 2 ),
+						'attributes' => array(
+							'currencyID' => $this->document->order->get_currency(),
 						),
 					),
 				),
 			);
-
-
-			$data[] = apply_filters( 'wpo_ips_xrechnung_handle_InvoiceLine', $invoiceLine, $data, $options, $item, $this );
+			
+			$invoiceLine[] = apply_filters( 'wpo_ips_xrechnung_handle_InvoiceLineItem', $invoiceLineItem, $data, $options, $item, $this );
+			$invoiceLine[] = apply_filters( 'wpo_ips_xrechnung_handle_InvoiceLinePrice', $invoiceLinePrice, $data, $options, $item, $this );
+			$data[]        = apply_filters( 'wpo_ips_xrechnung_handle_InvoiceLine', $invoiceLine, $data, $options, $item, $this );
 
 			// Empty this array at the end of the loop per item, so data doesn't stack
 			$taxSubtotal = [];
