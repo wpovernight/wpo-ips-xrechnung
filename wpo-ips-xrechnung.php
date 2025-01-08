@@ -32,7 +32,7 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 		 *
 		 * @var string
 		 */
-		public $base_plugin_version = '3.9.5-beta-6';
+		public $base_plugin_version = '3.9.5-beta-7';
 		
 		/**
 		 * UBL format
