@@ -2,9 +2,10 @@
 /**
  * Plugin Name:      PDF Invoices & Packing Slips for WooCommerce - XRechnung
  * Requires Plugins: woocommerce-pdf-invoices-packing-slips
- * Plugin URI:       https://wpovernight.com/downloads/woocommerce-pdf-invoices-packing-slips-bundle/
+ * Plugin URI:       https://github.com/wpovernight/wpo-ips-xrechnung
  * Description:      XRechnung add-on for PDF Invoices & Packing Slips for WooCommerce plugin.
  * Version:          1.0.3-beta-3
+ * Update URI:       https://github.com/wpovernight/wpo-ips-xrechnung
  * Author:           WP Overnight
  * Author URI:       https://wpovernight.com
  * License:          GPLv3
@@ -56,6 +57,13 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 		public $root_element = 'ubl:Invoice';
 		
 		/**
+		 * Plugin path
+		 * 
+		 * @var string
+		 */
+		public $plugin_path;
+		
+		/**
 		 * Plugin instance
 		 *
 		 * @var WPO_IPS_XRechnung
@@ -78,6 +86,20 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 		 * Constructor
 		 */
 		public function __construct() {
+			$this->plugin_path   = plugin_dir_path( __FILE__ );
+			$plugin_file         = basename( $this->plugin_path ) . '/wpo-ips-xrechnung.php';
+			$github_updater_file = $this->plugin_path . 'github-updater/GitHubUpdater.php';
+			
+			if ( ! class_exists( '\\WPO\\GitHubUpdater\\GitHubUpdater' ) && file_exists( $github_updater_file ) ) {
+				require_once $github_updater_file;
+			}
+			
+			if ( class_exists( '\\WPO\\GitHubUpdater\\GitHubUpdater' ) ) {
+				$gitHubUpdater = new \WPO\GitHubUpdater\GitHubUpdater( $plugin_file );
+				$gitHubUpdater->setChangelog( 'CHANGELOG.md' );
+				$gitHubUpdater->add();
+			}
+
 			if ( class_exists( 'WPO_WCPDF' ) && version_compare( WPO_WCPDF()->version, $this->base_plugin_version, '<' ) ) {
 				add_action( 'admin_notices', array( $this, 'base_plugin_dependency_notice' ) );
 				return;
