@@ -12,7 +12,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 class TaxTotalHandler extends UblHandler {
 
 	public function handle( $data, $options = array() ) {
-		$taxReasons = TaxesSettings::get_available_reasons();
+		$taxReasons   = TaxesSettings::get_available_reasons();
+		$orderTaxData = $this->document->order_tax_data;
+		
+		// Fallback if no tax data is available
+		if ( empty( $orderTaxData ) ) {
+			$orderTaxData = array(
+				0 => array(
+					'total_ex'  => $this->document->order->get_total(),
+					'total_tax' => 0,
+					'items'     => array(),
+				),
+			);
+		}
 		
 		$formatted_tax_array = array_map( function( $item ) use ( $taxReasons ) {
 			$itemTaxPercentage = ! empty( $item['percentage'] ) ? $item['percentage'] : 0;
@@ -72,7 +84,7 @@ class TaxTotalHandler extends UblHandler {
 					),
 				),
 			);
-		}, $this->document->order_tax_data );
+		}, $orderTaxData );
 
 		$array = array(
 			'name'  => 'cac:TaxTotal',
