@@ -15,38 +15,36 @@ class TaxTotalHandler extends UblHandler {
 		$taxReasons = TaxesSettings::get_available_reasons();
 		
 		$formatted_tax_array = array_map( function( $item ) use ( $taxReasons ) {
+			$itemTaxPercentage = ! empty( $item['percentage'] ) ? $item['percentage'] : 0;
+			$itemTaxCategory   = ! empty( $item['category'] ) ? $item['category'] : wpo_ips_ubl_get_tax_data_from_fallback( 'category', null );
+			$itemTaxReasonKey  = ! empty( $item['reason'] ) ? $item['reason'] : wpo_ips_ubl_get_tax_data_from_fallback( 'reason', null );
+			$itemTaxReason     = ! empty( $taxReasons[ $reasonKey ] ) ? $taxReasons[ $reasonKey ] : $reasonKey;
+			$itemTaxScheme     = ! empty( $item['scheme'] ) ? $item['scheme'] : wpo_ips_ubl_get_tax_data_from_fallback( 'scheme', null );
+			
 			$taxCategory = array(
 				array(
 					'name'  => 'cbc:ID',
-					'value' => strtoupper( $item['category'] ),
+					'value' => strtoupper( $itemTaxCategory ),
 				),
 				array(
 					'name'  => 'cbc:Percent',
-					'value' => round( $item['percentage'], 1 ),
+					'value' => round( $itemTaxPercentage, 1 ),
 				),
-			);
-
-			// Add TaxExemptionReason only if it's not empty
-			if ( ! empty( $item['reason'] ) && 'none' !== $item['reason'] ) {
-				$reasonKey     = $item['reason'];
-				$reason        = ! empty( $taxReasons[ $reasonKey ] ) ? $taxReasons[ $reasonKey ] : $reasonKey;
-				$taxCategory[] = array(
+				array(
 					'name'  => 'cbc:TaxExemptionReasonCode',
-					'value' => $reasonKey,
-				);
-				$taxCategory[] = array(
+					'value' => $itemTaxReasonKey,
+				),
+				array(
 					'name'  => 'cbc:TaxExemptionReason',
-					'value' => $reason,
-				);
-			}
-			
-			// Place the TaxScheme after the TaxExemptionReason
-			$taxCategory[] = array(
-				'name'  => 'cac:TaxScheme',
-				'value' => array(
-					array(
-						'name'  => 'cbc:ID',
-						'value' => strtoupper( $item['scheme'] ),
+					'value' => $itemTaxReason,
+				),
+				array(
+					'name'  => 'cac:TaxScheme',
+					'value' => array(
+						array(
+							'name'  => 'cbc:ID',
+							'value' => strtoupper( $itemTaxScheme ),
+						),
 					),
 				),
 			);
