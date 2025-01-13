@@ -18,7 +18,6 @@ class InvoiceLineHandler extends UblHandler {
 
 		// Build the tax totals array
 		foreach ( $items as $item_id => $item ) {
-			$taxSubtotal      = array();
 			$taxDataContainer = ( 'line_item' === $item['type'] ) ? 'line_tax_data' : 'taxes';
 			$taxDataKey       = ( 'line_item' === $item['type'] ) ? 'subtotal'      : 'total';
 			$lineTotalKey     = ( 'line_item' === $item['type'] ) ? 'line_total'    : 'total';
@@ -50,65 +49,6 @@ class InvoiceLineHandler extends UblHandler {
 					'category'   => $itemTaxCategory,
 					'reason'     => $itemTaxReasonKey,
 					'scheme'     => $itemTaxScheme,
-				);
-				
-				// Build the TaxCategory array
-				$taxCategory = array(
-					array(
-						'name'  => 'cbc:ID',
-						'value' => strtoupper( $itemTaxCategory ),
-					),
-					array(
-						'name'  => 'cbc:Percent',
-						'value' => round( $itemTaxPercentage, 2 ),
-					),
-				);
-
-				// Add TaxExemptionReason only if it's not empty
-				if ( 'none' !== $itemTaxReasonKey ) {
-					$taxCategory[] = array(
-						'name'  => 'cbc:TaxExemptionReasonCode',
-						'value' => $itemTaxReasonKey,
-					);
-					$taxCategory[] = array(
-						'name'  => 'cbc:TaxExemptionReason',
-						'value' => $itemTaxReason,
-					);
-				}
-				
-				// Place the TaxScheme after the TaxExemptionReason
-				$taxCategory[] = array(
-					'name'  => 'cac:TaxScheme',
-					'value' => array(
-						array(
-							'name'  => 'cbc:ID',
-							'value' => strtoupper( $itemTaxScheme ),
-						),
-					),
-				);
-
-				$taxSubtotal[] = array(
-					'name'  => 'cac:TaxSubtotal',
-					'value' => array(
-						array(
-							'name'       => 'cbc:TaxableAmount',
-							'value'      => wc_round_tax_total( $item[ $lineTotalKey ] ),
-							'attributes' => array(
-								'currencyID' => $this->document->order->get_currency(),
-							),
-						),
-						array(
-							'name'       => 'cbc:TaxAmount',
-							'value'      => wc_round_tax_total( $tax ),
-							'attributes' => array(
-								'currencyID' => $this->document->order->get_currency(),
-							),
-						),
-						array(
-							'name'  => 'cac:TaxCategory',
-							'value' => $taxCategory,
-						),
-					),
 				);
 			}
 			
@@ -187,9 +127,6 @@ class InvoiceLineHandler extends UblHandler {
 			$invoiceLine['value'][] = apply_filters( 'wpo_ips_xrechnung_handle_InvoiceLineItem', $invoiceLineItem, $data, $options, $item, $this );
 			$invoiceLine['value'][] = apply_filters( 'wpo_ips_xrechnung_handle_InvoiceLinePrice', $invoiceLinePrice, $data, $options, $item, $this );
 			$data[]                 = apply_filters( 'wpo_ips_xrechnung_handle_InvoiceLine', $invoiceLine, $data, $options, $item, $this );
-
-			// Empty this array at the end of the loop per item, so data doesn't stack
-			$taxSubtotal = [];
 		}
 
 		return $data;
