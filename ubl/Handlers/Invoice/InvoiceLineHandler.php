@@ -27,7 +27,6 @@ class InvoiceLineHandler extends UblHandler {
 					0 => array(
 						'percentage' => 0,
 						'category'   => '',
-						'reason'     => '',
 						'scheme'     => '',
 					),
 				);
