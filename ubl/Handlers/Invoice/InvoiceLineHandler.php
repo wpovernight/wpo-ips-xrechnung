@@ -19,21 +19,24 @@ class InvoiceLineHandler extends UblHandler {
 		// Build the tax totals array
 		foreach ( $items as $item_id => $item ) {
 			$taxSubtotal      = array();
-			$taxDataContainer = ( $item['type'] == 'line_item' ) ? 'line_tax_data' : 'taxes';
-			$taxDataKey       = ( $item['type'] == 'line_item' ) ? 'subtotal'      : 'total';
-			$lineTotalKey     = ( $item['type'] == 'line_item' ) ? 'line_total'    : 'total';
-			$line_tax_data    = $item[ $taxDataContainer ];
-			$itemTaxData      = array();
+			$taxDataContainer = ( 'line_item' === $item['type'] ) ? 'line_tax_data' : 'taxes';
+			$taxDataKey       = ( 'line_item' === $item['type'] ) ? 'subtotal'      : 'total';
+			$lineTotalKey     = ( 'line_item' === $item['type'] ) ? 'line_total'    : 'total';
+			$itemTaxData      = $item[ $taxDataContainer ];
+			
+			// Fallback if no tax data is available
+			if ( empty( $itemTaxData ) ) {
+				$itemTaxData = array(
+					0 => array(
+						'percentage' => 0,
+						'category'   => '',
+						'reason'     => '',
+						'scheme'     => '',
+					),
+				);
+			}
 
-			foreach ( $line_tax_data[ $taxDataKey ] as $tax_id => $tax ) {
-				if ( empty( $tax ) ) {
-					$tax = 0;
-				}
-
-				if ( ! is_numeric( $tax ) ) {
-					continue;
-				}
-
+			foreach ( $itemTaxData as $tax_id => $tax ) {
 				$itemTaxData       = ! empty( $orderTaxData[ $tax_id ] )         ? $orderTaxData[ $tax_id ]         : $itemTaxData;
 				$itemTaxPercentage = ! empty( $itemTaxData['percentage'] )       ? $itemTaxData['percentage']       : 0;
 				$itemTaxCategory   = ! empty( $itemTaxData['category'] )         ? $itemTaxData['category']         : wpo_ips_ubl_get_tax_data_from_fallback( 'category', null );
