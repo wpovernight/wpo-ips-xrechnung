@@ -12,8 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class InvoiceLineHandler extends UblHandler {
 
 	public function handle( $data, $options = array() ) {
-		$items      = $this->document->order->get_items( array( 'line_item', 'fee', 'shipping' ) );
-		$taxReasons = TaxesSettings::get_available_reasons();
+		$items        = $this->document->order->get_items( array( 'line_item', 'fee', 'shipping' ) );
+		$taxReasons   = TaxesSettings::get_available_reasons();
+		$orderTaxData = $this->document->order_tax_data;
 
 		// Build the tax totals array
 		foreach ( $items as $item_id => $item ) {
@@ -22,7 +23,7 @@ class InvoiceLineHandler extends UblHandler {
 			$taxDataKey       = ( $item['type'] == 'line_item' ) ? 'subtotal'      : 'total';
 			$lineTotalKey     = ( $item['type'] == 'line_item' ) ? 'line_total'    : 'total';
 			$line_tax_data    = $item[ $taxDataContainer ];
-			$taxOrderData     = array();
+			$itemTaxData      = array();
 
 			foreach ( $line_tax_data[ $taxDataKey ] as $tax_id => $tax ) {
 				if ( empty( $tax ) ) {
@@ -33,31 +34,42 @@ class InvoiceLineHandler extends UblHandler {
 					continue;
 				}
 
-				$taxOrderData = $this->document->order_tax_data[ $tax_id ];
+				$itemTaxData       = ! empty( $orderTaxData[ $tax_id ] )         ? $orderTaxData[ $tax_id ]         : $itemTaxData;
+				$itemTaxPercentage = ! empty( $itemTaxData['percentage'] )       ? $itemTaxData['percentage']       : 0;
+				$itemTaxCategory   = ! empty( $itemTaxData['category'] )         ? $itemTaxData['category']         : wpo_ips_ubl_get_tax_data_from_fallback( 'category', null );
+				$itemTaxReasonKey  = ! empty( $itemTaxData['reason'] )           ? $itemTaxData['reason']           : wpo_ips_ubl_get_tax_data_from_fallback( 'reason', null );
+				$itemTaxReason     = ! empty( $taxReasons[ $itemTaxReasonKey ] ) ? $taxReasons[ $itemTaxReasonKey ] : $itemTaxReasonKey;
+				$itemTaxScheme     = ! empty( $itemTaxData['scheme'] )           ? $itemTaxData['scheme']           : wpo_ips_ubl_get_tax_data_from_fallback( 'scheme', null );
+				
+				// Rebuild the item tax data to be used by 'ClassifiedTaxCategory'
+				$itemTaxData = array(
+					'percentage' => $itemTaxPercentage,
+					'category'   => $itemTaxCategory,
+					'reason'     => $itemTaxReasonKey,
+					'scheme'     => $itemTaxScheme,
+				);
 				
 				// Build the TaxCategory array
 				$taxCategory = array(
 					array(
 						'name'  => 'cbc:ID',
-						'value' => strtoupper( $taxOrderData['category'] ),
+						'value' => strtoupper( $itemTaxCategory ),
 					),
 					array(
 						'name'  => 'cbc:Percent',
-						'value' => round( $taxOrderData['percentage'], 2 ),
+						'value' => round( $itemTaxPercentage, 2 ),
 					),
 				);
 
 				// Add TaxExemptionReason only if it's not empty
-				if ( ! empty( $taxOrderData['reason'] ) && 'none' !== $taxOrderData['reason'] ) {
-					$reasonKey      = $taxOrderData['reason'];
-					$reason         = ! empty( $taxReasons[ $reasonKey ] ) ? $taxReasons[ $reasonKey ] : $reasonKey;
+				if ( 'none' !== $itemTaxReasonKey ) {
 					$taxCategory[] = array(
 						'name'  => 'cbc:TaxExemptionReasonCode',
-						'value' => $reasonKey,
+						'value' => $itemTaxReasonKey,
 					);
 					$taxCategory[] = array(
 						'name'  => 'cbc:TaxExemptionReason',
-						'value' => $reason,
+						'value' => $itemTaxReason,
 					);
 				}
 				
@@ -67,7 +79,7 @@ class InvoiceLineHandler extends UblHandler {
 					'value' => array(
 						array(
 							'name'  => 'cbc:ID',
-							'value' => strtoupper( $taxOrderData['scheme'] ),
+							'value' => strtoupper( $itemTaxScheme ),
 						),
 					),
 				);
@@ -131,24 +143,24 @@ class InvoiceLineHandler extends UblHandler {
 				),
 			);
 			
-			if ( ! empty( $taxOrderData ) ) {
+			if ( ! empty( $itemTaxData ) ) {
 				$invoiceLineItem['value'][] = array(
 					'name' => 'cac:ClassifiedTaxCategory',
 					'value' => array(
 						array(
 							'name'  => 'cbc:ID',
-							'value' => strtoupper( $taxOrderData['category'] ),
+							'value' => strtoupper( $itemTaxData['category'] ),
 						),
 						array(
 							'name'  => 'cbc:Percent',
-							'value' => round( $taxOrderData['percentage'], 2 ),
+							'value' => round( $itemTaxData['percentage'], 2 ),
 						),
 						array(
 							'name' => 'cac:TaxScheme',
 							'value' => array(
 								array(
 									'name'  => 'cbc:ID',
-									'value' => strtoupper( $taxOrderData['scheme'] ),
+									'value' => strtoupper( $itemTaxData['scheme'] ),
 								),
 							),
 						),
