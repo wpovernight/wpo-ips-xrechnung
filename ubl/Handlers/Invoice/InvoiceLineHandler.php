@@ -20,7 +20,6 @@ class InvoiceLineHandler extends UblHandler {
 		foreach ( $items as $item_id => $item ) {
 			$taxDataContainer = ( 'line_item' === $item['type'] ) ? 'line_tax_data' : 'taxes';
 			$taxDataKey       = ( 'line_item' === $item['type'] ) ? 'subtotal'      : 'total';
-			$lineTotalKey     = ( 'line_item' === $item['type'] ) ? 'line_total'    : 'total';
 			$itemTaxData      = isset( $item[ $taxDataContainer ][ $taxDataKey ] ) ? $item[ $taxDataContainer ][ $taxDataKey ] : array();
 			
 			// Fallback if no tax data is available
