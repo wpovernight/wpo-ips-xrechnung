@@ -16,9 +16,10 @@ class InvoiceLineHandler extends UblHandler {
 
 		// Build the tax totals array
 		foreach ( $items as $item_id => $item ) {
-			$taxDataContainer = ( 'line_item' === $item['type'] ) ? 'line_tax_data' : 'taxes';
-			$taxDataKey       = ( 'line_item' === $item['type'] ) ? 'subtotal'      : 'total';
-			$itemTaxData      = isset( $item[ $taxDataContainer ][ $taxDataKey ] ) ? $item[ $taxDataContainer ][ $taxDataKey ] : array();
+			$taxDataContainer      = ( 'line_item' === $item['type'] ) ? 'line_tax_data' : 'taxes';
+			$taxDataKey            = ( 'line_item' === $item['type'] ) ? 'subtotal'      : 'total';
+			$itemTaxData           = isset( $item[ $taxDataContainer ][ $taxDataKey ] ) ? $item[ $taxDataContainer ][ $taxDataKey ] : array();
+			$multipleTaxCategories = array();
 			
 			// Fallback if no tax data is available
 			if ( empty( $itemTaxData ) ) {
@@ -33,13 +34,13 @@ class InvoiceLineHandler extends UblHandler {
 			}
 
 			foreach ( $itemTaxData as $tax_id => $tax ) {
-				$itemTaxData       = ! empty( $orderTaxData[ $tax_id ] )   ? $orderTaxData[ $tax_id ]   : $itemTaxData;
-				$itemTaxPercentage = ! empty( $itemTaxData['percentage'] ) ? $itemTaxData['percentage'] : 0;
-				$itemTaxCategory   = ! empty( $itemTaxData['category'] )   ? $itemTaxData['category']   : wpo_ips_ubl_get_tax_data_from_fallback( 'category', null );
-				$itemTaxScheme     = ! empty( $itemTaxData['scheme'] )     ? $itemTaxData['scheme']     : wpo_ips_ubl_get_tax_data_from_fallback( 'scheme', null );
-				
-				// Rebuild the item tax data to be used by 'ClassifiedTaxCategory'
-				$itemTaxData = array(
+				$currentTaxData    = ! empty( $orderTaxData[ $tax_id ] )      ? $orderTaxData[ $tax_id ]      : $tax;
+				$itemTaxPercentage = ! empty( $currentTaxData['percentage'] ) ? $currentTaxData['percentage'] : 0;
+				$itemTaxCategory   = ! empty( $currentTaxData['category'] )   ? $currentTaxData['category']   : wpo_ips_ubl_get_tax_data_from_fallback( 'category', null );
+				$itemTaxScheme     = ! empty( $currentTaxData['scheme'] )     ? $currentTaxData['scheme']     : wpo_ips_ubl_get_tax_data_from_fallback( 'scheme', null );
+
+				// Store this iteration's tax info as one entry
+				$multipleTaxCategories[] = array(
 					'percentage' => $itemTaxPercentage,
 					'category'   => $itemTaxCategory,
 					'scheme'     => $itemTaxScheme,
@@ -80,29 +81,32 @@ class InvoiceLineHandler extends UblHandler {
 				),
 			);
 			
-			if ( ! empty( $itemTaxData ) ) {
-				$invoiceLineItem['value'][] = array(
-					'name' => 'cac:ClassifiedTaxCategory',
-					'value' => array(
-						array(
-							'name'  => 'cbc:ID',
-							'value' => strtoupper( $itemTaxData['category'] ),
-						),
-						array(
-							'name'  => 'cbc:Percent',
-							'value' => round( $itemTaxData['percentage'], 2 ),
-						),
-						array(
-							'name' => 'cac:TaxScheme',
-							'value' => array(
-								array(
-									'name'  => 'cbc:ID',
-									'value' => strtoupper( $itemTaxData['scheme'] ),
+			// Loop over all collected tax categories.
+			if ( ! empty( $multipleTaxCategories ) ) {
+				foreach ( $multipleTaxCategories as $singleTax ) {
+					$invoiceLineItem['value'][] = array(
+						'name'  => 'cac:ClassifiedTaxCategory',
+						'value' => array(
+							array(
+								'name'  => 'cbc:ID',
+								'value' => strtoupper( $singleTax['category'] ),
+							),
+							array(
+								'name'  => 'cbc:Percent',
+								'value' => round( $singleTax['percentage'], 2 ),
+							),
+							array(
+								'name' => 'cac:TaxScheme',
+								'value' => array(
+									array(
+										'name'  => 'cbc:ID',
+										'value' => strtoupper( $singleTax['scheme'] ),
+									),
 								),
 							),
 						),
-					),
-				);
+					);
+				}
 			}
 			
 			$invoiceLinePrice = array(
