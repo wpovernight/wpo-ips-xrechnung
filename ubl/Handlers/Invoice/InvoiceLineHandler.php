@@ -3,7 +3,6 @@
 namespace WPO\IPS\XRechnung\Handlers\Invoice;
 
 use WPO\IPS\UBL\Handlers\UblHandler;
-use WPO\IPS\UBL\Settings\TaxesSettings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -13,7 +12,6 @@ class InvoiceLineHandler extends UblHandler {
 
 	public function handle( $data, $options = array() ) {
 		$items        = $this->document->order->get_items( array( 'line_item', 'fee', 'shipping' ) );
-		$taxReasons   = TaxesSettings::get_available_reasons();
 		$orderTaxData = $this->document->order_tax_data;
 
 		// Build the tax totals array
@@ -35,18 +33,15 @@ class InvoiceLineHandler extends UblHandler {
 			}
 
 			foreach ( $itemTaxData as $tax_id => $tax ) {
-				$itemTaxData       = ! empty( $orderTaxData[ $tax_id ] )         ? $orderTaxData[ $tax_id ]         : $itemTaxData;
-				$itemTaxPercentage = ! empty( $itemTaxData['percentage'] )       ? $itemTaxData['percentage']       : 0;
-				$itemTaxCategory   = ! empty( $itemTaxData['category'] )         ? $itemTaxData['category']         : wpo_ips_ubl_get_tax_data_from_fallback( 'category', null );
-				$itemTaxReasonKey  = ! empty( $itemTaxData['reason'] )           ? $itemTaxData['reason']           : wpo_ips_ubl_get_tax_data_from_fallback( 'reason', null );
-				$itemTaxReason     = ! empty( $taxReasons[ $itemTaxReasonKey ] ) ? $taxReasons[ $itemTaxReasonKey ] : $itemTaxReasonKey;
-				$itemTaxScheme     = ! empty( $itemTaxData['scheme'] )           ? $itemTaxData['scheme']           : wpo_ips_ubl_get_tax_data_from_fallback( 'scheme', null );
+				$itemTaxData       = ! empty( $orderTaxData[ $tax_id ] )   ? $orderTaxData[ $tax_id ]   : $itemTaxData;
+				$itemTaxPercentage = ! empty( $itemTaxData['percentage'] ) ? $itemTaxData['percentage'] : 0;
+				$itemTaxCategory   = ! empty( $itemTaxData['category'] )   ? $itemTaxData['category']   : wpo_ips_ubl_get_tax_data_from_fallback( 'category', null );
+				$itemTaxScheme     = ! empty( $itemTaxData['scheme'] )     ? $itemTaxData['scheme']     : wpo_ips_ubl_get_tax_data_from_fallback( 'scheme', null );
 				
 				// Rebuild the item tax data to be used by 'ClassifiedTaxCategory'
 				$itemTaxData = array(
 					'percentage' => $itemTaxPercentage,
 					'category'   => $itemTaxCategory,
-					'reason'     => $itemTaxReasonKey,
 					'scheme'     => $itemTaxScheme,
 				);
 			}
