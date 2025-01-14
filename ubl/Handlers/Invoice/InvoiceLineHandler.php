@@ -35,8 +35,8 @@ class InvoiceLineHandler extends UblHandler {
 			foreach ( $itemTaxData as $tax_id => $tax ) {
 				$currentTaxData    = ! empty( $orderTaxData[ $tax_id ] )      ? $orderTaxData[ $tax_id ]      : $tax;
 				$itemTaxPercentage = ! empty( $currentTaxData['percentage'] ) ? $currentTaxData['percentage'] : 0;
-				$itemTaxCategory   = ! empty( $currentTaxData['category'] )   ? $currentTaxData['category']   : wpo_ips_ubl_get_tax_data_from_fallback( 'category', null );
-				$itemTaxScheme     = ! empty( $currentTaxData['scheme'] )     ? $currentTaxData['scheme']     : wpo_ips_ubl_get_tax_data_from_fallback( 'scheme', null );
+				$itemTaxCategory   = ! empty( $currentTaxData['category'] )   ? $currentTaxData['category']   : wpo_ips_ubl_get_tax_data_from_fallback( 'category', null, $this->document->order );
+				$itemTaxScheme     = ! empty( $currentTaxData['scheme'] )     ? $currentTaxData['scheme']     : wpo_ips_ubl_get_tax_data_from_fallback( 'scheme', null, $this->document->order );
 
 				// Store this iteration's tax info as one entry
 				$multipleTaxCategories[] = array(
