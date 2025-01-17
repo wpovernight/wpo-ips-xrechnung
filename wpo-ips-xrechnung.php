@@ -4,7 +4,7 @@
  * Requires Plugins: woocommerce-pdf-invoices-packing-slips
  * Plugin URI:       https://github.com/wpovernight/wpo-ips-xrechnung
  * Description:      XRechnung add-on for PDF Invoices & Packing Slips for WooCommerce plugin.
- * Version:          1.0.3-beta-7
+ * Version:          1.0.3-beta-8
  * Update URI:       https://github.com/wpovernight/wpo-ips-xrechnung
  * Author:           WP Overnight
  * Author URI:       https://wpovernight.com
@@ -26,14 +26,14 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 		 *
 		 * @var string
 		 */
-		public $version = '1.0.3-beta-7';
+		public $version = '1.0.3-beta-8';
 		
 		/**
 		 * Base plugin version
 		 *
 		 * @var string
 		 */
-		public $base_plugin_version = '3.9.5-beta-10';
+		public $base_plugin_version = '3.9.5-beta-13';
 		
 		/**
 		 * UBL format
@@ -110,6 +110,7 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 			add_action( 'init', array( $this, 'load_translations' ) );
 			add_action( 'before_woocommerce_init', array( $this, 'custom_order_tables_compatibility' ) );
 			
+			add_filter( 'wpo_ips_ubl_is_country_format_extension_active', '__return_true' );
 			add_filter( 'wpo_wcpdf_document_ubl_settings_formats', array( $this, 'add_format_to_ubl_settings' ), 10, 2 );
 			add_filter( 'wpo_wc_ubl_document_root_element', array( $this, 'add_root_element' ), 10, 2 );
 			add_filter( 'wpo_wc_ubl_document_format', array( $this, 'set_document_format' ), 10, 2 );
