@@ -54,7 +54,7 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 		 *
 		 * @var string
 		 */
-		public $root_element = 'ubl:Invoice';
+		public $root_element = '{urn:oasis:names:specification:ubl:schema:xsd:Invoice-2}Invoice';
 		
 		/**
 		 * Plugin path
