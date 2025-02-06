@@ -1,5 +1,9 @@
 # Changelog
 
+### v1.0.4 (2025-02-06)
+- Tweak: Update root element to include URN
+- Fix: incorrect addition of <AccountingSupplierParty> and <AccountingCustomerParty> elements
+
 ### v1.0.3 (2025-01-20)
 
 - New: GitHub Updater
