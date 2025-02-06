@@ -11,10 +11,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 class AddressHandler extends UblHandler {
 
 	public function handle( $data, $options = array() ) {
-		$root = isset( $options['root'] ) ? $options['root'] : 'AccountingSupplierParty';
+		$root = isset( $options['root'] ) ? $options['root'] : 'cac:AccountingSupplierParty';
 
-		// AccountingSupplierParty or AccountingCustomerParty
-		if ( 'AccountingSupplierParty' === $root ) {
+		// cac:AccountingSupplierParty or cac:AccountingCustomerParty
+		if ( 'cac:AccountingSupplierParty' === $root ) {
 			return $this->return_supplier_party( $data, $options );
 		}
 
@@ -24,12 +24,9 @@ class AddressHandler extends UblHandler {
 	public function return_supplier_party( $data, $options = array() ) {
 
 		$supplierParty = array(
-			'name'  => 'cac:AccountingSupplierParty',
-			'value' => array(
-				array(
-					'name'  => 'cac:Party',
-					'value' => $this->return_supplier_party_details(),
-				),
+			array(
+				'name'  => 'cac:Party',
+				'value' => $this->return_supplier_party_details(),
 			),
 		);
 
@@ -204,46 +201,43 @@ class AddressHandler extends UblHandler {
 		}
 
 		$customerParty = array(
-			'name'  => 'cac:AccountingCustomerParty',
-			'value' => array(
-				array(
-					'name'  => 'cac:Party',
-					'value' => array(
-						array(
-							'name'  => 'cbc:EndpointID',
-							'value' => $this->document->order->get_billing_email(),
-							'attributes' => array(
-								'schemeID' => 'EM',
-							),
+			array(
+				'name'  => 'cac:Party',
+				'value' => array(
+					array(
+						'name'  => 'cbc:EndpointID',
+						'value' => $this->document->order->get_billing_email(),
+						'attributes' => array(
+							'schemeID' => 'EM',
 						),
-						array(
-							'name'  => 'cac:PostalAddress',
-							'value' => array(
-								array(
-									'name'  => 'cbc:StreetName',
-									'value' => wpo_ips_ubl_sanitize_string( $this->document->order->get_billing_address_1() ),
+					),
+					array(
+						'name'  => 'cac:PostalAddress',
+						'value' => array(
+							array(
+								'name'  => 'cbc:StreetName',
+								'value' => wpo_ips_ubl_sanitize_string( $this->document->order->get_billing_address_1() ),
+							),
+							array(
+								'name'  => 'cbc:CityName',
+								'value' => wpo_ips_ubl_sanitize_string( $this->document->order->get_billing_city() ),
+							),
+							array(
+								'name'  => 'cbc:PostalZone',
+								'value' => $this->document->order->get_billing_postcode(),
+							),
+							array(
+								'name'  => 'cac:AddressLine',
+								'value' => array(
+									'name'  => 'cbc:Line',
+									'value' => wpo_ips_ubl_sanitize_string( $this->document->order->get_billing_address_1() . '<br/>' . $this->document->order->get_billing_address_2() ),
 								),
-								array(
-									'name'  => 'cbc:CityName',
-									'value' => wpo_ips_ubl_sanitize_string( $this->document->order->get_billing_city() ),
-								),
-								array(
-									'name'  => 'cbc:PostalZone',
-									'value' => $this->document->order->get_billing_postcode(),
-								),
-								array(
-									'name'  => 'cac:AddressLine',
-									'value' => array(
-										'name'  => 'cbc:Line',
-										'value' => wpo_ips_ubl_sanitize_string( $this->document->order->get_billing_address_1() . '<br/>' . $this->document->order->get_billing_address_2() ),
-									),
-								),
-								array(
-									'name'  => 'cac:Country',
-									'value' => array(
-										'name'  => 'cbc:IdentificationCode',
-										'value' => $this->document->order->get_billing_country(),
-									),
+							),
+							array(
+								'name'  => 'cac:Country',
+								'value' => array(
+									'name'  => 'cbc:IdentificationCode',
+									'value' => $this->document->order->get_billing_country(),
 								),
 							),
 						),
@@ -272,7 +266,7 @@ class AddressHandler extends UblHandler {
 				),
 			);
 			
-			$customerParty['value'][0]['value'][] = $partyTaxScheme;
+			$customerParty[0]['value'][] = $partyTaxScheme;
 		}
 		
 		if ( ! empty( $customerPartyName ) ) {
@@ -286,7 +280,7 @@ class AddressHandler extends UblHandler {
 				),
 			);
 			
-			$customerParty['value'][0]['value'][] = $partyLegalEntity;
+			$customerParty[0]['value'][] = $partyLegalEntity;
 		}
 
 		$data[] = apply_filters( 'wpo_ips_xrechnung_handle_AccountingCustomerParty', $customerParty, $data, $options, $this );
