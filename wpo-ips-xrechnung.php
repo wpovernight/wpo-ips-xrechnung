@@ -253,18 +253,18 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 						'enabled' => true,
 						'handler' => \WPO\IPS\UBL\Handlers\Common\AdditionalDocumentReferenceHandler::class,
 					),
-					'accountsupplierparty' => array(
+					'ccountingsupplierparty' => array(
 						'enabled' => true,
 						'handler' => \WPO\IPS\XRechnung\Handlers\Common\AddressHandler::class,
 						'options' => array(
-							'root' => 'AccountingSupplierParty',
+							'root' => 'cac:AccountingSupplierParty',
 						),
 					),
 					'accountingcustomerparty' => array(
 						'enabled' => true,
 						'handler' => \WPO\IPS\XRechnung\Handlers\Common\AddressHandler::class,
 						'options' => array(
-							'root' => 'AccountingCustomerParty',
+							'root' => 'cac:AccountingCustomerParty',
 						),
 					),
 					'delivery' => array(
