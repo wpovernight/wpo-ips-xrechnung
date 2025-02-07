@@ -114,6 +114,8 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 			add_action( 'before_woocommerce_init', array( $this, 'custom_order_tables_compatibility' ) );
 			
 			add_filter( 'wpo_ips_ubl_is_country_format_extension_active', '__return_true' );
+			add_filter( 'wpo_ips_en16931_handle_CustomizationID', array( $this, 'make_customization_id_compliant' ), 10, 4 );
+			add_filter( 'wpo_ips_en16931_handle_ProfileID', array( $this, 'make_profile_id_compliant' ), 10, 4 );
 			add_filter( 'wpo_wcpdf_document_ubl_settings_formats', array( $this, 'add_format_to_ubl_settings' ), 10, 2 );
 			add_filter( 'wpo_wc_ubl_document_root_element', array( $this, 'add_root_element' ), 10, 2 );
 			add_filter( 'wpo_wc_ubl_document_format', array( $this, 'set_document_format' ), 10, 2 );
@@ -147,6 +149,7 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 		 */
 		public function load_translations(): void {
 			load_plugin_textdomain( 'wpo-ips-xrechnung', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+			load_plugin_textdomain( 'wpo-ips-en16931', false, dirname( plugin_basename( __FILE__ ) ) . '/en16931/languages/' );
 		}
 		
 		/**
@@ -158,6 +161,34 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 			if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
 				\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
 			}
+		}
+		
+		/**
+		 * Make customization ID compliant
+		 *
+		 * @param array $customization_id
+		 * @param array $data
+		 * @param array $options
+		 * @param \WPO\IPS\EN16931\Handlers\Common\CustomizationIdHandler $handler
+		 * @return void
+		 */
+		public function make_customization_id_compliant( array $customization_id, array $data, array $options, \WPO\IPS\EN16931\Handlers\Common\CustomizationIdHandler $handler ) {
+			$customization_id['value'] .= '#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0';
+			return $customization_id;
+		}
+		
+		/**
+		 * Make profile ID compliant
+		 *
+		 * @param array $profile_id
+		 * @param array $data
+		 * @param array $options
+		 * @param \WPO\IPS\EN16931\Handlers\Common\ProfileIdHandler $handler
+		 * @return void
+		 */
+		public function make_profile_id_compliant( array $profile_id, array $data, array $options, \WPO\IPS\EN16931\Handlers\Common\ProfileIdHandler $handler ) {
+			$profile_id['value'] .= '#compliant#de';
+			return $profile_id;
 		}
 		
 		/**
@@ -215,11 +246,11 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 				$format = apply_filters( 'wpo_ips_xrechnung_document_format', array(
 					'customizationid' => array(
 						'enabled' => true,
-						'handler' => \WPO\IPS\XRechnung\Handlers\Common\CustomizationIdHandler::class,
+						'handler' => \WPO\IPS\EN16931\Handlers\Common\CustomizationIdHandler::class,
 					),
 					'profileid' => array(
 						'enabled' => true,
-						'handler' => \WPO\IPS\XRechnung\Handlers\Common\ProfileIdHandler::class,
+						'handler' => \WPO\IPS\EN16931\Handlers\Common\ProfileIdHandler::class,
 					),
 					'id' => array(
 						'enabled' => true,
@@ -231,19 +262,19 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 					),
 					'duedate' => array(
 						'enabled' => true,
-						'handler' => \WPO\IPS\XRechnung\Handlers\Common\DueDateHandler::class,
+						'handler' => \WPO\IPS\EN16931\Handlers\Common\DueDateHandler::class,
 					),
-					'invoicetype' => array(
+					'invoicetypecode' => array(
 						'enabled' => true,
-						'handler' => \WPO\IPS\XRechnung\Handlers\Invoice\InvoiceTypeCodeHandler::class,
+						'handler' => \WPO\IPS\EN16931\Handlers\Invoice\InvoiceTypeCodeHandler::class,
 					),
 					'invoicenote' => array(
 						'enabled' => true,
-						'handler' => \WPO\IPS\XRechnung\Handlers\Invoice\InvoiceNoteHandler::class,
+						'handler' => \WPO\IPS\EN16931\Handlers\Invoice\InvoiceNoteHandler::class,
 					),
 					'documentcurrencycode' => array(
 						'enabled' => true,
-						'handler' => \WPO\IPS\XRechnung\Handlers\Common\DocumentCurrencyCodeHandler::class,
+						'handler' => \WPO\IPS\EN16931\Handlers\Common\DocumentCurrencyCodeHandler::class,
 					),
 					'buyerreference' => array(
 						'enabled' => true,
@@ -253,16 +284,16 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 						'enabled' => true,
 						'handler' => \WPO\IPS\UBL\Handlers\Common\AdditionalDocumentReferenceHandler::class,
 					),
-					'ccountingsupplierparty' => array(
+					'accountsupplierparty' => array(
 						'enabled' => true,
-						'handler' => \WPO\IPS\XRechnung\Handlers\Common\AddressHandler::class,
+						'handler' => \WPO\IPS\EN16931\Handlers\Common\AddressHandler::class,
 						'options' => array(
 							'root' => 'cac:AccountingSupplierParty',
 						),
 					),
 					'accountingcustomerparty' => array(
 						'enabled' => true,
-						'handler' => \WPO\IPS\XRechnung\Handlers\Common\AddressHandler::class,
+						'handler' => \WPO\IPS\EN16931\Handlers\Common\AddressHandler::class,
 						'options' => array(
 							'root' => 'cac:AccountingCustomerParty',
 						),
@@ -277,7 +308,7 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 					),
 					'paymentterms' => array(
 						'enabled' => true,
-						'handler' => \WPO\IPS\XRechnung\Handlers\Common\PaymentTermsHandler::class,
+						'handler' => \WPO\IPS\EN16931\Handlers\Common\PaymentTermsHandler::class,
 					),
 					'allowancecharge' => array(
 						'enabled' => false,
@@ -285,15 +316,15 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 					),
 					'taxtotal' => array(
 						'enabled' => true,
-						'handler' => \WPO\IPS\XRechnung\Handlers\Common\TaxTotalHandler::class,
+						'handler' => \WPO\IPS\EN16931\Handlers\Common\TaxTotalHandler::class,
 					),
 					'legalmonetarytotal' => array(
 						'enabled' => true,
-						'handler' => \WPO\IPS\XRechnung\Handlers\Common\LegalMonetaryTotalHandler::class,
+						'handler' => \WPO\IPS\EN16931\Handlers\Common\LegalMonetaryTotalHandler::class,
 					),
-					'invoicelines' => array(
+					'invoiceline' => array(
 						'enabled' => true,
-						'handler' => \WPO\IPS\XRechnung\Handlers\Invoice\InvoiceLineHandler::class,
+						'handler' => \WPO\IPS\EN16931\Handlers\Invoice\InvoiceLineHandler::class,
 					),
 				), $ubl_document );
 			}

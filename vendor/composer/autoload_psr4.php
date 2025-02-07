@@ -6,5 +6,5 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'WPO\\IPS\\XRechnung\\' => array($baseDir . '/ubl'),
+    'WPO\\IPS\\EN16931\\' => array($baseDir . '/en16931'),
 );

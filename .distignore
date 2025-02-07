@@ -13,3 +13,4 @@ composer.json
 composer.lock
 
 !/github-updater/
+!/en16931/
