@@ -170,9 +170,9 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 		 * @param array $data
 		 * @param array $options
 		 * @param \WPO\IPS\EN16931\Handlers\Common\CustomizationIdHandler $handler
-		 * @return void
+		 * @return array
 		 */
-		public function make_customization_id_compliant( array $customization_id, array $data, array $options, \WPO\IPS\EN16931\Handlers\Common\CustomizationIdHandler $handler ) {
+		public function make_customization_id_compliant( array $customization_id, array $data, array $options, \WPO\IPS\EN16931\Handlers\Common\CustomizationIdHandler $handler ): array {
 			if ( $this->is_xrechnung_ubl_document( $handler->document ) ) {
 				$customization_id['value'] .= '#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0';
 			}
@@ -186,9 +186,9 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 		 * @param array $data
 		 * @param array $options
 		 * @param \WPO\IPS\EN16931\Handlers\Common\ProfileIdHandler $handler
-		 * @return void
+		 * @return array
 		 */
-		public function make_profile_id_compliant( array $profile_id, array $data, array $options, \WPO\IPS\EN16931\Handlers\Common\ProfileIdHandler $handler ) {
+		public function make_profile_id_compliant( array $profile_id, array $data, array $options, \WPO\IPS\EN16931\Handlers\Common\ProfileIdHandler $handler ): array {
 			if ( $this->is_xrechnung_ubl_document( $handler->document ) ) {
 				$profile_id['value'] .= '#compliant#de';
 			}
