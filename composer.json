@@ -3,7 +3,7 @@
 	"description": "PDF Invoices & Packing Slips for WooCommerce - XRechnung",
 	"autoload": {
 		"psr-4": {
-			"WPO\\IPS\\XRechnung\\": "ubl/"
+			"WPO\\IPS\\EN16931\\": "en16931/"
 		}
 	},
 	"config": {
