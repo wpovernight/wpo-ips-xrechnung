@@ -173,7 +173,9 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 		 * @return void
 		 */
 		public function make_customization_id_compliant( array $customization_id, array $data, array $options, \WPO\IPS\EN16931\Handlers\Common\CustomizationIdHandler $handler ) {
-			$customization_id['value'] .= '#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0';
+			if ( $this->is_xrechnung_ubl_document( $handler->document ) ) {
+				$customization_id['value'] .= '#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0';
+			}
 			return $customization_id;
 		}
 		
@@ -187,7 +189,9 @@ if ( ! class_exists( 'WPO_IPS_XRechnung' ) ) {
 		 * @return void
 		 */
 		public function make_profile_id_compliant( array $profile_id, array $data, array $options, \WPO\IPS\EN16931\Handlers\Common\ProfileIdHandler $handler ) {
-			$profile_id['value'] .= '#compliant#de';
+			if ( $this->is_xrechnung_ubl_document( $handler->document ) ) {
+				$profile_id['value'] .= '#compliant#de';
+			}
 			return $profile_id;
 		}
 		
