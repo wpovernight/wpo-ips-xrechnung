@@ -1,7 +1,7 @@
 # Changelog
 
 ### v1.0.6 (2025-02-13)
-- Fixed an issue with the built-in updater
+- Fix: issue with the built-in updater
 
 ### v1.0.5 (2025-02-13)
 - Tweak: Replace built-in handlers with EN16931 submodule
