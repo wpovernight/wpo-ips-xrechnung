@@ -1,5 +1,8 @@
 # Changelog
 
+### v1.0.5 (2025-02-13)
+- Tweak: Replace built-in handlers with EN16931 submodule
+
 ### v1.0.4 (2025-02-06)
 - Tweak: Update root element to include URN
 - Fix: incorrect addition of <AccountingSupplierParty> and <AccountingCustomerParty> elements

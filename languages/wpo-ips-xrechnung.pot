@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: PDF Invoices & Packing Slips for WooCommerce - XRechnung 1.0.3\n"
+"Project-Id-Version: PDF Invoices & Packing Slips for WooCommerce - XRechnung 1.0.5\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wpo-ips-xrechnung\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-01-20T12:26:18+00:00\n"
+"POT-Creation-Date: 2025-02-13T09:04:52+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: wpo-ips-xrechnung\n"
@@ -39,16 +39,7 @@ msgstr ""
 msgid "https://wpovernight.com"
 msgstr ""
 
-#: ubl/Handlers/Common/PaymentTermsHandler.php:17
-msgid "Invoice has been paid."
-msgstr ""
-
-#. translators: %d: Due date days
-#: ubl/Handlers/Common/PaymentTermsHandler.php:24
-msgid "Net within %d days."
-msgstr ""
-
 #. translators: plugin version
-#: wpo-ips-xrechnung.php:131
+#: wpo-ips-xrechnung.php:133
 msgid "PDF Invoices & Packing Slips for WooCommerce - XRechnung requires PDF Invoices & Packing Slips for WooCommerce version %s or higher."
 msgstr ""
