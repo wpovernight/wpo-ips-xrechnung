@@ -14,3 +14,6 @@ composer.lock
 
 !/github-updater/
 !/en16931/
+/github-updater/.github/*
+/en16931/.github/*
+/en16931/index.php
