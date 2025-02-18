@@ -1,5 +1,8 @@
 # Changelog
 
+### v1.0.7 (2025-02-18)
+- New: Upgraded the Github updater to v1.1.4
+
 ### v1.0.6 (2025-02-13)
 - Fix: issue with the built-in updater
 
