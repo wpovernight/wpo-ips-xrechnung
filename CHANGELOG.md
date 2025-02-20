@@ -1,5 +1,8 @@
 # Changelog
 
+### v1.0.8 (2025-02-20)
+- New: Upgraded the EN16931 module to v1.0.3
+
 ### v1.0.7 (2025-02-18)
 - New: Upgraded the Github updater to v1.1.4
 
